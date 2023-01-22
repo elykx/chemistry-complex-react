@@ -1,26 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from "./components/Header";
+import MainPage from "./components/pages/MainPage";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import TableParametersInputPage from "./components/pages/TableParametersInputPage";
+import InputDataPage from "./components/pages/InputDataPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+        <div>
+            <Header/>
+            <Routes>
+                <Route path='main' element={<MainPage/>}/>
+                <Route path='table-parameters/input' element={<TableParametersInputPage/>}/>
+                <Route path='table-parameters/input/input-data' element={<InputDataPage/>}/>
+            </Routes>
+        </div>
+    </BrowserRouter>
+  )
 }
-
 export default App;
