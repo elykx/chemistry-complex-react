@@ -1,7 +1,8 @@
-import React, {FC}from "react";
+import React, {FC} from "react";
 import { useNavigate } from 'react-router-dom'
 import {useState} from "react";
 import {ITableParameters} from "../../entities/ITableParameters";
+import InputNumber from "../inputNumber/InputNumber";
 const TableParametersInputPage:FC = () => {
 
     const [tableParameters, setTableParameters] = useState<ITableParameters>({
@@ -28,20 +29,29 @@ const TableParametersInputPage:FC = () => {
                 <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md">
                     <label className="block font-medium text-lg mb-2">
                         <span className="text-[#12221a]">Количество компонентов:</span>
-                        <input className="border border-[#12221a] rounded-lg p-2 w-full" type="number" min="1" max="20" value={tableParameters.components}
-                               onChange={e => setTableParameters({ ...tableParameters, components: e.target.valueAsNumber })} />
+                        <InputNumber value={tableParameters.components}
+                                     onChange={e => setTableParameters({ ...tableParameters, components: e.target.valueAsNumber })}
+                                     min={1}
+                                     max={20}
+                                     step={1}/>
                     </label>
                     <br />
                     <label className="block font-medium text-lg mb-2">
                         <span className="text-[#12221a]">Количество стадий:</span>
-                        <input  className="border border-[#12221a] rounded-lg p-2 w-full" type="number" min="1" max="20" value={tableParameters.stages}
-                               onChange={e => setTableParameters({ ...tableParameters, stages: e.target.valueAsNumber })} />
+                        <InputNumber value={tableParameters.stages}
+                                     onChange={e => setTableParameters({ ...tableParameters, stages: e.target.valueAsNumber })}
+                                     min={1}
+                                     max={20}
+                                     step={1}/>
                     </label>
                     <br />
                     <label className="block font-medium text-lg mb-2">
                         <span className="text-[#12221a]">Количество экспериментов:</span>
-                        <input  className="border border-[#12221a] rounded-lg p-2 w-full" type="number" min="1" max="20" value={tableParameters.experiments}
-                               onChange={e => setTableParameters({...tableParameters, experiments: e.target.valueAsNumber })} />
+                        <InputNumber value={tableParameters.experiments}
+                                     onChange={e => setTableParameters({ ...tableParameters, experiments: e.target.valueAsNumber })}
+                                     min={1}
+                                     max={20}
+                                     step={1}/>
                     </label>
                     <br />
                     <button className="bg-[#06160E] text-white rounded-lg py-2 px-4 w-full hover:bg-[#365043]" type="submit">Далее</button>

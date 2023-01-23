@@ -3,6 +3,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {ITableParameters} from "../../entities/ITableParameters";
 import {ITableData} from "../../entities/ITableData";
 import InputTable from "../inputTable/InputTable";
+import InputNumber from "../inputNumber/InputNumber";
 
 const InputTablePage:FC = () => {
     const navigate = useNavigate();
@@ -42,32 +43,41 @@ const InputTablePage:FC = () => {
     return (
         <div className="flex">
             <form className="w-1/5 p-4 bg-gray-200" onSubmit={handleSubmit}>
-                <label className="block text-[#12221a] font-medium mb-2">Начальное время</label>
-                <input className="bg-white focus:outline-none focus:shadow-outline border
-                 border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal" type="number" min="0" max="1000" step="any"
-                       value={inputData.initialTime} onChange={e => setInputData({ ...inputData, initialTime: e.target.valueAsNumber })}/>
-
-                <label className="block text-[#12221a] font-medium mt-4 mb-2">Время</label>
-                <input className="bg-white focus:outline-none focus:shadow-outline
-                 border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal" type="number" min="0" max="1000" step="any"
-                       value={inputData.time} onChange={e => setInputData({ ...inputData, time: e.target.valueAsNumber })}/>
-
-                <label className="block text-[#12221a] font-medium mt-4 mb-2">Шаг</label>
-                <input className="bg-white focus:outline-none focus:shadow-outline border
-                 border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal" type="number" min="0" max="10" step="any"
-                       value={inputData.step} onChange={e => setInputData({ ...inputData, step: e.target.valueAsNumber })}/>
+                <label className="block font-medium mb-2">
+                    <span className="text-[#12221a] text-sm">Начальное время:</span>
+                    <InputNumber value={inputData.initialTime}
+                                 onChange={e => setInputData({ ...inputData, initialTime: e.target.valueAsNumber })}
+                                 min={0}
+                                 max={1000}
+                                 step="any"/>
+                </label>
+                <label className="block font-medium mb-2">
+                    <span className="text-[#12221a] text-sm">Время:</span>
+                    <InputNumber value={inputData.time}
+                                 onChange={e => setInputData({ ...inputData, time: e.target.valueAsNumber })}
+                                 min={0}
+                                 max={1000}
+                                 step="any"/>
+                </label>
+                <label className="block font-medium mb-2">
+                    <span className="text-[#12221a] text-sm">Шаг:</span>
+                    <InputNumber value={inputData.step}
+                                 onChange={e => setInputData({ ...inputData, step: e.target.valueAsNumber })}
+                                 min={0}
+                                 max={1000}
+                                 step="any"/>
+                </label>
                 <label className="block text-[#12221a] font-medium mt-4 mb-2">Метод</label>
                 <select
                     className="border rounded w-full py-2 px-3 text-gray-700"
                     id="select"
                     value={inputData.method}
-                    onChange={e => setInputData({ ...inputData, method: e.target.value })}
-                >
+                    onChange={e => setInputData({ ...inputData, method: e.target.value })}>
                     <option value="option1">Option 1</option>
                     <option value="option2">Option 2</option>
                     <option value="option3">Option 3</option>
-                </select><br/>
-                <br/>
+                </select>
+
                 <button className="bg-[#06160E] text-white rounded-lg py-2 px-4 w-full hover:bg-[#365043]" type="submit">Далее</button>
             </form>
             <form className="overflow-x-auto max-w-screen-lg w-4/5 p-4 bg-gray-300">
