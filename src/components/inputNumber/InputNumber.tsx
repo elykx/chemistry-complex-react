@@ -11,7 +11,7 @@ interface InputNumberProps {
 const InputNumber:FC<InputNumberProps> = ({ value, onChange, className, min,max,step }) => {
     return (
         <input
-            className={`border border-[#12221a] rounded-lg p-2 w-full ${className}`}
+            className={`border border-darkGreen text-darkGreen rounded-lg p-2 w-full ${className}`}
             type="number"
             min={min}
             max={max}

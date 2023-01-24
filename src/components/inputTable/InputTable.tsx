@@ -2,11 +2,13 @@ import React, { FC, useState } from 'react';
 
 interface Props {
     firstRow: string[];
-    inputDataArray: any[][];
+    inputDataArray: number[][];
     firstColumnText: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>, i: number, j: number) => void;
+    dataName:string;
 }
 
-const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText }) => {
+const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText,onChange, dataName}) => {
     const [inputData, setInputData] = useState(inputDataArray);
 
     return (
@@ -14,7 +16,7 @@ const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText }) => 
             <thead>
                 <tr>
                     {firstRow.map((cell, i) => (
-                        <th className="font-medium text-sm border-2 border-[#12221a]"
+                        <th className="font-medium text-sm text-white border-2 border-blackGreen bg-lightGreen"
                             key={i} >
                             {cell}
                         </th>
@@ -24,20 +26,15 @@ const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText }) => 
             <tbody>
             {inputData.map((row, i) => (
                 <tr key={i}>
-                    <td className="font-medium text-sm border-2 border-[#12221a]">
+                    <td className="font-medium text-sm border-2 border-blackGreen">
                         {`${firstColumnText} ${i + 1}`}
                     </td>
                     {row.map((cell, j) => (
-                        <td className="font-medium text-sm border-2 border-[#12221a]" key={j}>
-                            <input className="w-7"
+                        <td className="font-medium text-sm border-2 border-blackGreen" key={j}>
+                            <input className="w-12"
                                    type="number"
-                                   value={cell}
-                                   onChange={(e) =>
-                                       setInputData((prevData) => {
-                                           prevData[i][j] = Number(e.target.value);
-                                           return [...prevData];
-                                       })
-                                   }
+                                   value={dataName === 'experimentalData' || dataName === 'constantsSpeed' ? cell : cell !== 0 ? cell: ''}
+                                   onChange={(e)=>onChange(e,i,j)}
                             />
                         </td>
                     ))}

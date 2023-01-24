@@ -4,6 +4,7 @@ import {ITableParameters} from "../../entities/ITableParameters";
 import {ITableData} from "../../entities/ITableData";
 import InputTable from "../inputTable/InputTable";
 import InputNumber from "../inputNumber/InputNumber";
+import InputSelect from "../inputSelect/InputSelect";
 
 const InputTablePage:FC = () => {
     const navigate = useNavigate();
@@ -25,26 +26,28 @@ const InputTablePage:FC = () => {
         time: 0,
         step: 0,
         method: "",
-        matrixStechiometricCoefficients: new Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
-        matrixIndicators: new Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
-        experimentalData: new Array(tableData.experiments).fill([]).map(() => new Array(tableData.components).fill(0)),
-        constantsSpeed: new Array(tableData.components).fill([]).map(() => new Array(1).fill(0)),
+        matrixStechiometricCoefficients: Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
+        matrixIndicators: Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
+        experimentalData: Array(tableData.experiments).fill([]).map(() => new Array(tableData.components+1).fill(0)),
+        constantsSpeed: Array(tableData.components).fill([]).map(() => new Array(1).fill(0)),
     });
 
-    const firstRow = ["Номер стадии", ...Array.from({ length: tableData.components }, (_, i) => `A${i+1}`)];
-
+    const methods = [{ value: 'option1', label: 'Option 1' },
+                    { value: 'option2', label: 'Option 2' },
+                    { value: 'option3', label: 'Option 3' },]
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        console.log(typeof(inputData.experimentalData[0][0]))
         console.log(tableData.components)
         console.log(inputData)
     }
 
     return (
         <div className="flex">
-            <form className="w-1/5 p-4 bg-gray-200" onSubmit={handleSubmit}>
+            <form className="w-1/5 p-4 bg-darkGreen" onSubmit={handleSubmit}>
                 <label className="block font-medium mb-2">
-                    <span className="text-[#12221a] text-sm">Начальное время:</span>
+                    <span className="text-white text-sm">Начальное время:</span>
                     <InputNumber value={inputData.initialTime}
                                  onChange={e => setInputData({ ...inputData, initialTime: e.target.valueAsNumber })}
                                  min={0}
@@ -52,7 +55,7 @@ const InputTablePage:FC = () => {
                                  step="any"/>
                 </label>
                 <label className="block font-medium mb-2">
-                    <span className="text-[#12221a] text-sm">Время:</span>
+                    <span className="text-white text-sm">Время:</span>
                     <InputNumber value={inputData.time}
                                  onChange={e => setInputData({ ...inputData, time: e.target.valueAsNumber })}
                                  min={0}
@@ -60,48 +63,97 @@ const InputTablePage:FC = () => {
                                  step="any"/>
                 </label>
                 <label className="block font-medium mb-2">
-                    <span className="text-[#12221a] text-sm">Шаг:</span>
+                    <span className="text-white text-sm">Шаг:</span>
                     <InputNumber value={inputData.step}
                                  onChange={e => setInputData({ ...inputData, step: e.target.valueAsNumber })}
                                  min={0}
                                  max={1000}
-                                 step="any"/>
+                                 step={0.000001}/>
                 </label>
-                <label className="block text-[#12221a] font-medium mt-4 mb-2">Метод</label>
-                <select
-                    className="border rounded w-full py-2 px-3 text-gray-700"
-                    id="select"
-                    value={inputData.method}
-                    onChange={e => setInputData({ ...inputData, method: e.target.value })}>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                </select>
-
-                <button className="bg-[#06160E] text-white rounded-lg py-2 px-4 w-full hover:bg-[#365043]" type="submit">Далее</button>
+                <label className="block font-medium mb-2">
+                    <span className="text-white text-sm">Метод:</span>
+                    <InputSelect value={inputData.method}
+                                options={methods}
+                                onChange={e => setInputData({ ...inputData, method: e.target.value })}/>
+                </label>
+                <label className="block font-medium mb-2 py-2">
+                    <button className="bg-white text-black rounded-lg py-2 px-4 w-full
+                    hover:bg-blackGreen hover:text-white" type="submit">Далее</button>
+                </label>
             </form>
-            <form className="overflow-x-auto max-w-screen-lg w-4/5 p-4 bg-gray-300">
-                <p className="text-[#12221a] font-medium text-xs">Количество компонентов: {tableData.components}</p>
-                <p className="text-[#12221a] font-medium text-xs">Количество стадий: {tableData.stages}</p>
-                <p className="text-[#12221a] font-medium text-xs">Количество экспериментов: {tableData.experiments}</p>
-                <label className="block text-[#12221a] font-medium mt-2 mb-2">Матрица стехиометрических коэффициентов</label>
+            <form className="overflow-x-auto max-w-screen-lg w-4/5 p-4 bg-white">
+                <label className="text-blackGreen font-medium text-xs">
+                    <p>*-заполните таблицы</p>
+                </label>
+                <label className="text-blackGreen font-medium text-xs">
+                    <p>Количество компонентов: {tableData.components}</p>
+                    <p>Количество стадий: {tableData.stages}</p>
+                    <p>Количество экспериментов: {tableData.experiments}</p>
+                </label>
 
-                <InputTable firstRow={['Номер стадии', ...Array(tableData.components).fill(0).map((_, i) =>
-                    `A${i + 1}`)]} inputDataArray={inputData.matrixStechiometricCoefficients} firstColumnText=""/>
+                <label className="block text-blackGreen font-medium mt-2 mb-2">Матрица стехиометрических коэффициентов</label>
+                <InputTable
+                    firstRow={['Номер стадии', ...Array(tableData.components).fill(0).map((_, i) =>
+                        `A${i + 1}`)]}
+                    inputDataArray={inputData.matrixStechiometricCoefficients}
+                    firstColumnText=""
+                    dataName='matrixStechiometricCoefficients'
+                    onChange={(e, row, col) => {
+                        if (Number(e.target.value) === 1 || Number(e.target.value) === 0|| Number(e.target.value) === -1) {
+                            setInputData((prevData) => {
+                                prevData.matrixStechiometricCoefficients[row][col] = Number(e.target.value);
+                                return {...prevData};
+                            });
+                        }
+                    }}/>
 
-                <label className="block text-[#12221a] font-medium mt-2 mb-2">Матрица показателей степени</label>
+                <label className="block text-blackGreen font-medium mt-2 mb-2">Матрица показателей степени</label>
+                <InputTable
+                    firstRow={['Номер стадии', ...Array(tableData.components).fill(0).map((_, i) =>
+                        `A${i + 1}`)]}
+                    inputDataArray={inputData.matrixIndicators}
+                    firstColumnText=""
+                    dataName='matrixIndicators'
+                    onChange={(e, row, col) => {
+                        if (Number(e.target.value) >= 0 && Number(e.target.value) <= 10) {
+                            setInputData((prevData) => {
+                                prevData.matrixIndicators[row][col] = Number(e.target.value);
+                                return {...prevData};
+                            });
+                        }
+                    }}/>
 
-                <InputTable firstRow={['Номер стадии', ...Array(tableData.components).fill(0).map((_, i) =>
-                    `A${i + 1}`)]} inputDataArray={inputData.matrixIndicators} firstColumnText=""/>
+                <label className="block text-blackGreen font-medium mt-2 mb-2">Экспериментальные данные</label>
+                <InputTable
+                    firstRow={['Номер стадии','Время', ...Array(tableData.components).fill(0).map((_, i) =>
+                        `A${i + 1}`)]}
+                    inputDataArray={inputData.experimentalData}
+                    firstColumnText=""
+                    dataName='experimentalData'
+                    onChange={(e, row, col) => {
+                        if (Number(e.target.value) >= 0 && Number(e.target.value) <= 1000) {
+                            setInputData((prevData) => {
+                                prevData.experimentalData[row][col] = Number(e.target.value);
+                                return {...prevData};
+                            });
+                        }
+                    }}/>
 
-                <label className="block text-[#12221a] font-medium mt-2 mb-2">Экспериментальные данные</label>
+                <label className="block text-blackGreen font-medium mt-2 mb-2">Константы скорости</label>
+                <InputTable
+                    firstRow={['','Константа скорости']}
+                    inputDataArray={inputData.constantsSpeed}
+                    firstColumnText="k"
+                    dataName='constantsSpeed'
+                    onChange={(e, row, col) => {
+                        if (Number(e.target.value) >= 0 && Number(e.target.value) <= 1000) {
+                            setInputData((prevData) => {
+                                prevData.constantsSpeed[row][col] = Number(e.target.value);
+                                return {...prevData};
+                            });
+                        }
+                    }}/>
 
-                <InputTable firstRow={['Номер эксперимента', ...Array(tableData.components).fill(0).map((_, i) =>
-                    `A${i + 1}`)]} inputDataArray={inputData.experimentalData} firstColumnText=""/>
-
-                <label className="block text-[#12221a] font-medium mt-2 mb-2">Константы скорости</label>
-
-                <InputTable firstRow={['','Константа скорости']} inputDataArray={inputData.constantsSpeed} firstColumnText="k"/>
             </form>
 
         </div>
