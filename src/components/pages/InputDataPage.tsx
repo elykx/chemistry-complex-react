@@ -5,6 +5,7 @@ import {ITableData} from "../../entities/ITableData";
 import InputTable from "../inputTable/InputTable";
 import InputNumber from "../inputNumber/InputNumber";
 import InputSelect from "../inputSelect/InputSelect";
+import {inputDataURL} from "../../config";
 
 const InputTablePage:FC = () => {
     const navigate = useNavigate();
@@ -22,25 +23,49 @@ const InputTablePage:FC = () => {
     }, [location.state]);
 
     const [inputData, setInputData] = useState<ITableData>({
-        initialTime: 0,
+        initial_time: 0,
         time: 0,
         step: 0,
-        method: "",
-        matrixStechiometricCoefficients: Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
-        matrixIndicators: Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
-        experimentalData: Array(tableData.experiments).fill([]).map(() => new Array(tableData.components+1).fill(0)),
-        constantsSpeed: Array(tableData.components).fill([]).map(() => new Array(1).fill(0)),
+        method: "EULER",
+        matrix_stechiometric_coefficients: Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
+        matrix_indicators: Array(tableData.stages).fill([]).map(() => new Array(tableData.components).fill(0)),
+        experimental_data: Array(tableData.experiments).fill([]).map(() => new Array(tableData.components+1).fill(0)),
+        constants_speed: Array(tableData.components).fill([]).map(() => new Array(1).fill(0)),
     });
 
-    const methods = [{ value: 'option1', label: 'Option 1' },
-                    { value: 'option2', label: 'Option 2' },
-                    { value: 'option3', label: 'Option 3' },]
+    const methods = [{ value: 'EULER', label: 'Метод Эйлера' },
+                    { value: 'IMPLICIT_EULER', label: 'Неявный метод Эйлера' },
+                    { value: 'TRAPEZOID', label: 'Метод трапеций' },
+                    { value: 'MIDDLE', label: 'Метод средней точки' },
+                    { value: 'RK2', label: 'Метод Рунге-Кутты 2-го порядка' },
+                    { value: 'RK4', label: 'Метод Рунге-Кутты 4-го порядка' },
+                    { value: 'KM', label: 'Метод Кутты-Мерсона' },
+                    { value: 'RKF', label: 'Метод Рунге-Кутты-Фелберга' },
+                    { value: 'EXPLICIT_ADAMS', label: 'Явный двухшаговый метод Адамса' },]
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        console.log(typeof(inputData.experimentalData[0][0]))
-        console.log(tableData.components)
-        console.log(inputData)
+        fetch(inputDataURL, {
+            method: 'POST',
+            body: JSON.stringify({
+                "initial_time": inputData.initial_time,
+                "time": inputData.time,
+                "step": inputData.step,
+                "method": inputData.method,
+                "matrix_stechiometric_coefficients": JSON.stringify(inputData.matrix_stechiometric_coefficients),
+                "matrix_indicators": JSON.stringify(inputData.matrix_indicators),
+                "experimental_data": JSON.stringify(inputData.experimental_data),
+                "constants_speed": JSON.stringify(inputData.constants_speed)
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            // handle response
+        })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        console.log(JSON.stringify(inputData))
     }
 
     return (
@@ -48,8 +73,8 @@ const InputTablePage:FC = () => {
             <form className="w-1/5 p-4 bg-darkGreen" onSubmit={handleSubmit}>
                 <label className="block font-medium mb-2">
                     <span className="text-white text-sm">Начальное время:</span>
-                    <InputNumber value={inputData.initialTime}
-                                 onChange={e => setInputData({ ...inputData, initialTime: e.target.valueAsNumber })}
+                    <InputNumber value={inputData.initial_time}
+                                 onChange={e => setInputData({ ...inputData, initial_time: e.target.valueAsNumber })}
                                  min={0}
                                  max={1000}
                                  step="any"/>
@@ -95,13 +120,13 @@ const InputTablePage:FC = () => {
                 <InputTable
                     firstRow={['Номер стадии', ...Array(tableData.components).fill(0).map((_, i) =>
                         `A${i + 1}`)]}
-                    inputDataArray={inputData.matrixStechiometricCoefficients}
+                    inputDataArray={inputData.matrix_stechiometric_coefficients}
                     firstColumnText=""
-                    dataName='matrixStechiometricCoefficients'
+                    dataName='matrix_stechiometric_coefficients'
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) === 1 || Number(e.target.value) === 0|| Number(e.target.value) === -1) {
                             setInputData((prevData) => {
-                                prevData.matrixStechiometricCoefficients[row][col] = Number(e.target.value);
+                                prevData.matrix_stechiometric_coefficients[row][col] = Number(e.target.value);
                                 return {...prevData};
                             });
                         }
@@ -111,13 +136,13 @@ const InputTablePage:FC = () => {
                 <InputTable
                     firstRow={['Номер стадии', ...Array(tableData.components).fill(0).map((_, i) =>
                         `A${i + 1}`)]}
-                    inputDataArray={inputData.matrixIndicators}
+                    inputDataArray={inputData.matrix_indicators}
                     firstColumnText=""
-                    dataName='matrixIndicators'
+                    dataName='matrix_indicators'
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) >= 0 && Number(e.target.value) <= 10) {
                             setInputData((prevData) => {
-                                prevData.matrixIndicators[row][col] = Number(e.target.value);
+                                prevData.matrix_indicators[row][col] = Number(e.target.value);
                                 return {...prevData};
                             });
                         }
@@ -127,13 +152,13 @@ const InputTablePage:FC = () => {
                 <InputTable
                     firstRow={['Номер стадии','Время', ...Array(tableData.components).fill(0).map((_, i) =>
                         `A${i + 1}`)]}
-                    inputDataArray={inputData.experimentalData}
+                    inputDataArray={inputData.experimental_data}
                     firstColumnText=""
-                    dataName='experimentalData'
+                    dataName='experimental_data'
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) >= 0 && Number(e.target.value) <= 1000) {
                             setInputData((prevData) => {
-                                prevData.experimentalData[row][col] = Number(e.target.value);
+                                prevData.experimental_data[row][col] = Number(e.target.value);
                                 return {...prevData};
                             });
                         }
@@ -142,13 +167,13 @@ const InputTablePage:FC = () => {
                 <label className="block text-blackGreen font-medium mt-2 mb-2">Константы скорости</label>
                 <InputTable
                     firstRow={['','Константа скорости']}
-                    inputDataArray={inputData.constantsSpeed}
+                    inputDataArray={inputData.constants_speed}
                     firstColumnText="k"
-                    dataName='constantsSpeed'
+                    dataName='constants_speed'
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) >= 0 && Number(e.target.value) <= 1000) {
                             setInputData((prevData) => {
-                                prevData.constantsSpeed[row][col] = Number(e.target.value);
+                                prevData.constants_speed[row][col] = Number(e.target.value);
                                 return {...prevData};
                             });
                         }

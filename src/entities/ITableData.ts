@@ -1,10 +1,10 @@
 export interface ITableData {
-    initialTime: number,
+    initial_time: number,
     time: number,
     step: number
     method: string
-    matrixStechiometricCoefficients: number[][]
-    matrixIndicators: number[][]
-    experimentalData: number[][]
-    constantsSpeed: number[][]
+    matrix_stechiometric_coefficients: number[][]
+    matrix_indicators: number[][]
+    experimental_data: number[][]
+    constants_speed: number[][]
 }

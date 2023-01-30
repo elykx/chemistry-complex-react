@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {useState} from "react";
 import {ITableParameters} from "../../entities/ITableParameters";
 import InputNumber from "../inputNumber/InputNumber";
+import {tableParametersURL} from "../../config";
 const TableParametersInputPage:FC = () => {
 
     const [tableParameters, setTableParameters] = useState<ITableParameters>({
@@ -15,7 +16,18 @@ const TableParametersInputPage:FC = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        fetch(tableParametersURL, {
+            method: 'POST',
+            body: JSON.stringify(tableParameters),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            // handle response
+        })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         console.log(tableParameters)
         navigate('input-data', { state: { tableParameters } })
     }

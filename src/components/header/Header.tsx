@@ -1,6 +1,8 @@
 import React, {FC} from "react";
 
 import logoImage from '../../assets/images/logo.png'
+import History from "../history/History";
+import {tableParametersURL} from "../../config";
 
 const Header:FC = () => {
   return(
@@ -11,6 +13,7 @@ const Header:FC = () => {
                   <span className='self-center text-xs text-white'>Комплек для решения <br/> задачи химической кинетики</span>
               </a>
               <div>
+                  {/*<History currentPage={tableParametersURL}/>*/}
                   <span className='self-center text-xs text-white'>История</span>
               </div>
           </div>
