@@ -65,6 +65,7 @@ const InputTablePage:FC = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
+        navigate('/result-page')
         console.log(JSON.stringify(inputData))
     }
 
