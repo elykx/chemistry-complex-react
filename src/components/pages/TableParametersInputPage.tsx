@@ -11,25 +11,26 @@ const TableParametersInputPage:FC = () => {
         stages: 0,
         experiments: 0
     });
-
+    const [recordId, setRecordId] = useState<number>(0);
     const navigate = useNavigate();
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        fetch(tableParametersURL, {
-            method: 'POST',
-            body: JSON.stringify(tableParameters),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            // handle response
-        })
-            .catch(error => {
-                console.error('Error:', error);
+        try{
+            const response = await fetch(tableParametersURL, {
+                method: 'POST',
+                body: JSON.stringify(tableParameters),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
-        console.log(tableParameters)
-        navigate('input-data', { state: { tableParameters } })
+            const data = await response.json()
+            await setRecordId(data.id);
+            navigate(`/input-data/${data.id}`)
+        }
+        catch(error) {
+            console.error('Error:', error);
+        }
     }
 
     return (

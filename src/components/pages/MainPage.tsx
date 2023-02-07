@@ -5,7 +5,7 @@ import mainImage from '../../assets/images/mainImage.png'
 const MainPage:FC = () => {
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/table-parameters/input');
+        navigate('/table-parameters');
     }
     return (
         <div className="h-screen w-full flex">
