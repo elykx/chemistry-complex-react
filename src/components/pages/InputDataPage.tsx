@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useState} from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import {ITableParameters} from "../../entities/ITableParameters";
 import {ITableData} from "../../entities/ITableData";
 import InputTable from "../table/InputTable";
@@ -12,7 +12,6 @@ const InputTablePage:FC = () => {
     const navigate = useNavigate();
     const {tableParamId} = useParams();
 
-    //const [tableParameters, setTableParameters] = useState<ITableParameters>();
     const [recordId, setRecordId] = useState<number>(0);
 
     const [inputData, setInputData] = useState<ITableData>({
@@ -27,8 +26,6 @@ const InputTablePage:FC = () => {
         constants_speed: [],
 
     });
-
-
 
     useEffect(() => {
       const fetchData = async() => {
@@ -50,8 +47,6 @@ const InputTablePage:FC = () => {
       fetchData();
     }, []);
 
-
-
     const methods = [{ value: 'EULER', label: 'Метод Эйлера' },
                     { value: 'IMPLICIT_EULER', label: 'Неявный метод Эйлера' },
                     { value: 'TRAPEZOID', label: 'Метод трапеций' },
@@ -61,6 +56,7 @@ const InputTablePage:FC = () => {
                     { value: 'KM', label: 'Метод Кутты-Мерсона' },
                     { value: 'RKF', label: 'Метод Рунге-Кутты-Фелберга' },
                     { value: 'EXPLICIT_ADAMS', label: 'Явный двухшаговый метод Адамса' },]
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try{
@@ -83,14 +79,14 @@ const InputTablePage:FC = () => {
 
             });
             const data = await response.json()
-            await setRecordId(data.id)
-            navigate(`/result-page/${data.id}`);
+            await setRecordId(data.input_data.id)
+            navigate(`/result-page/${data.input_data.id}`);
         }
         catch(error) {
             console.error('Error:', error);
         }
     }
-    console.log(inputData.matrix_stechiometric_coefficients)
+
     return (
         <div className="flex">
             <form className="w-1/5 p-4 bg-darkGreen" onSubmit={handleSubmit}>
@@ -130,7 +126,7 @@ const InputTablePage:FC = () => {
                 </label>
             </form>
 
-            { inputData.table_parameters.components > 0 ?
+            { inputData.table_parameters.components ?
             <form className="overflow-x-auto max-w-screen-lg w-4/5 p-4 bg-white">
                 <label className="text-blackGreen font-medium text-xs">
                     <p>*-заполните таблицы</p>
@@ -153,8 +149,9 @@ const InputTablePage:FC = () => {
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) === 1 || Number(e.target.value) === 0|| Number(e.target.value) === -1) {
                             setInputData((prevData) => {
-                                prevData.matrix_stechiometric_coefficients[row][col] = Number(e.target.value);
-                                return {...prevData};
+                                const updatedData = {...prevData};
+                                updatedData.matrix_stechiometric_coefficients[row][col] = Number(e.target.value);
+                                return updatedData;
                             });
                         }
                     }}/>
@@ -169,8 +166,9 @@ const InputTablePage:FC = () => {
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) >= 0 && Number(e.target.value) <= 10) {
                             setInputData((prevData) => {
-                                prevData.matrix_indicators[row][col] = Number(e.target.value);
-                                return {...prevData};
+                                const updatedData = {...prevData};
+                                updatedData.matrix_indicators[row][col] = Number(e.target.value);
+                                return updatedData;
                             });
                         }
                     }}/>
@@ -185,8 +183,9 @@ const InputTablePage:FC = () => {
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) >= 0 && Number(e.target.value) <= 1000) {
                             setInputData((prevData) => {
-                                prevData.experimental_data[row][col] = Number(e.target.value);
-                                return {...prevData};
+                                const updatedData = {...prevData};
+                                updatedData.experimental_data[row][col] = Number(e.target.value);
+                                return updatedData;
                             });
                         }
                     }}/>
@@ -200,14 +199,15 @@ const InputTablePage:FC = () => {
                     onChange={(e, row, col) => {
                         if (Number(e.target.value) >= 0 && Number(e.target.value) <= 1000) {
                             setInputData((prevData) => {
-                                prevData.constants_speed[row][col] = Number(e.target.value);
-                                return {...prevData};
+                                const updatedData = {...prevData};
+                                updatedData.constants_speed[row][col] = Number(e.target.value);
+                                return updatedData;
                             });
                         }
                     }}/>
 
             </form>
-                    : "loading"}
+                    : "loading..."}
         </div>
     );
 };

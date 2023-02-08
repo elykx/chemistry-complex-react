@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 
 interface Props {
     firstRow: string[];
@@ -10,6 +10,10 @@ interface Props {
 
 const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText,onChange, dataName}) => {
     const [inputData, setInputData] = useState(inputDataArray);
+
+    useEffect(() => {
+        setInputData(inputDataArray);
+    }, [inputDataArray]);
 
     return (
         <table className="border-2 w-4/5">

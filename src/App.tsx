@@ -5,6 +5,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import TableParametersInputPage from "./components/pages/TableParametersInputPage";
 import InputDataPage from "./components/pages/InputDataPage";
 import ResultPage from "./components/pages/ResultPage";
+import CompareResultPage from "./components/pages/CompareResultPage";
 
 function App() {
   return (
@@ -13,9 +14,10 @@ function App() {
             <Header/>
             <Routes>
                 <Route path='main' element={<MainPage/>}/>
-                <Route path='table-parameters/input' element={<TableParametersInputPage/>}/>
-                <Route path='table-parameters/input/input-data' element={<InputDataPage/>}/>
-                <Route path='result-page' element={<ResultPage/>}/>
+                <Route path='table-parameters' element={<TableParametersInputPage/>}/>
+                <Route path='input-data/:tableParamId' element={<InputDataPage/>}/>
+                <Route path='result-page/:inputDataId' element={<ResultPage/>}/>
+                <Route path='compare-result/:inputDataId' element={<CompareResultPage/>}/>
             </Routes>
         </div>
     </BrowserRouter>
