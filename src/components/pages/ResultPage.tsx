@@ -56,6 +56,8 @@ const ResultPage: FC = () => {
         navigate(`/input-data/${tableId}`)
     }
 
+    console.log(resultArray?.input_data.experimental_data)
+
     return (
         <div>
             <div className='flex flex-wrap justify-center items-center mx-auto max-w-screen-xl bg-lightGreen' >
@@ -104,12 +106,13 @@ const ResultPage: FC = () => {
                     <button className="border border-black bg-white text-black text-sm rounded-lg py-2 px-2
                         hover:bg-lightGreen hover:text-white"
                             onClick={() => setExpDataIsCollapsed(!expDataIsCollapsed)}>Скрыть/показать эксп. данные</button>
+                    { resultArray !== undefined ?
                     <div className={`${expDataIsCollapsed ? 'block' : 'hidden'} py-2 px-2 transition duration-300 ease-in-out`}>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Экспериментальные значения</label>
-                        <ExperimentalPointTable resultArray={resultArray?.input_data.experimental_data}/>
+                        <ExperimentalPointTable resultArray={resultArray.input_data.experimental_data}/>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Рассчетные значения в экспериментальных точках</label>
-                        <ExperimentalPointTable resultArray={resultArray?.experimental_point}/>
-                    </div>
+                        <ExperimentalPointTable resultArray={resultArray.experimental_point}/>
+                    </div>: 'loading...'}
                 </div>
             </div>
         </div>

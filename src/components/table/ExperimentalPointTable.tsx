@@ -1,16 +1,16 @@
 import React, {FC} from 'react';
 
 interface Props {
-    resultArray?: number[][];
+    resultArray: number[][];
 }
 
 const ExperimentalPointTable: FC<Props> = ({ resultArray }) => {
     return (
-        <table className="border-2 w-4/5">
+        <table className="border-2 w-4/5 mb-2 ml-4">
             <thead>
             <tr>
                 {['Номер стадии', 'Время',
-                    ...Array(resultArray ? resultArray[0].length - 1 : 1)
+                    ...Array(resultArray[0].length - 1)
                     .fill(0)
                     .map((_, i) => `С${i + 1}`),
                 ].map((cell, i) => (
@@ -21,7 +21,7 @@ const ExperimentalPointTable: FC<Props> = ({ resultArray }) => {
             </tr>
             </thead>
             <tbody>
-            {resultArray?.map((row, i) => (
+            {resultArray && Array.isArray(resultArray) ? resultArray.map((row, i) => (
                 <tr key={i}>
                     <td className="font-medium text-sm border-2 border-blackGreen">
                         {`${i + 1}`}
@@ -32,7 +32,7 @@ const ExperimentalPointTable: FC<Props> = ({ resultArray }) => {
                         </td>
                     ))}
                 </tr>
-            ))}
+            )): null}
             </tbody>
         </table>
     );
