@@ -21,7 +21,7 @@ const CompareResultPage:FC = () => {
         initial_time: 0,
         time: 0,
         step: 0,
-        method: "EULER",
+        method: "EXPLICIT_EULER",
         matrix_stechiometric_coefficients: [],
         matrix_indicators: [],
         experimental_data: [],
@@ -33,7 +33,7 @@ const CompareResultPage:FC = () => {
         initial_time: 0,
         time: 0,
         step: 0,
-        method: "EULER",
+        method: "EXPLICIT_EULER",
         matrix_stechiometric_coefficients: [],
         matrix_indicators: [],
         experimental_data: [],
@@ -111,7 +111,7 @@ const CompareResultPage:FC = () => {
                 } catch (error) {
                     console.error('Error:', error);
                 }
-                console.log(inputDataOneId)
+
                 try {
                     const response = await fetch(inputDataURL, {
                         method: 'POST',
@@ -138,6 +138,8 @@ const CompareResultPage:FC = () => {
             }
         };
         fetchDataOne();
+
+        console.log(inputDataOneId, inputDataTwoId)
 
         const fetchData = async () => {
             if (inputDataOneId){
@@ -185,12 +187,17 @@ const CompareResultPage:FC = () => {
 
     console.log(typeof resultDataOne?.input_data.experimental_data)
 
-    const methods = [{ value: 'EULER', label: 'Метод Эйлера' },
+    const methods = [{ value: 'EXPLICIT_EULER', label: 'Явный метод Эйлера' },
         { value: 'IMPLICIT_EULER', label: 'Неявный метод Эйлера' },
+        { value: 'SEMI_IMPLICIT_EULER', label: 'Полунеявный метод Эйлера'},
         { value: 'TRAPEZOID', label: 'Метод трапеций' },
         { value: 'MIDDLE', label: 'Метод средней точки' },
-        { value: 'RK2', label: 'Метод Рунге-Кутты 2-го порядка' },
-        { value: 'RK4', label: 'Метод Рунге-Кутты 4-го порядка' },
+        { value: 'EXPLICIT_RK2', label: 'Явный метод Рунге-Кутты 2-го порядка' },
+        { value: 'IMPLICIT_RK2', label: 'Неявный метод Рунге-Кутты 2-го порядка' },
+        { value: 'SEMI_IMPLICIT_RK2', label: 'Полунеявный метод Рунге-Кутты 2-го порядка'},
+        { value: 'EXPLICIT_RK4', label: 'Явный метод Рунге-Кутты 4-го порядка' },
+        { value: 'IMPLICIT_RK4', label: 'Неявный метод Рунге-Кутты 4-го порядка' },
+        { value: 'SEMI_IMPLICIT_RK4', label: 'Полунеявный метод Рунге-Кутты 4-го порядка' },
         { value: 'KM', label: 'Метод Кутты-Мерсона' },
         { value: 'RKF', label: 'Метод Рунге-Кутты-Фелберга' },
         { value: 'EXPLICIT_ADAMS', label: 'Явный двухшаговый метод Адамса' },]
@@ -226,7 +233,7 @@ const CompareResultPage:FC = () => {
                 <div className={`${firstIsCollapsed ? 'w-5/6 ' : 'w-1/5'} border-2 overflow-x-auto max-w-screen-lg p-4 bg-white `}>
                     <p className=" border-2 text-center">${resultDataOne.input_data.method}</p>
                     <div>
-                        <button className=" border border-black bg-white text-black text-sm rounded-lg py-2 px-4
+                        <button className=" border border-black bg-white text-black text-sm rounded-lg m-2  py-2 px-4
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setFirstIsCollapsed(!firstIsCollapsed)}>Скрыть/показать решение</button>
                     </div>
@@ -244,7 +251,7 @@ const CompareResultPage:FC = () => {
                 <div className={`${secondIsCollapsed ? 'w-5/6 ' : 'w-1/5'} border-2 overflow-x-auto max-w-screen-lg p-4 bg-white `}>
                     <div>
                         <p className=" border-2 text-center" >${resultDataTwo.input_data.method}</p>
-                        <button className=" border border-black bg-white text-black text-sm rounded-lg py-2 px-4
+                        <button className=" border border-black bg-white text-black text-sm rounded-lg m-2 py-2 px-4
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setSecondIsCollapsed(!secondIsCollapsed)}>Скрыть/показать решение</button>
                     </div>

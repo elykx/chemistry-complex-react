@@ -36,7 +36,7 @@ const InputTablePage:FC = () => {
                   initial_time: 0,
                   time: 0,
                   step: 0,
-                  method: "EULER",
+                  method: "EXPLICIT_EULER",
                   matrix_stechiometric_coefficients: Array(response.data.stages).fill([]).map(() => new Array(response.data.components).fill(0)),
                   matrix_indicators: Array(response.data.stages).fill([]).map(() => new Array(response.data.components).fill(0)),
                   experimental_data: Array(response.data.experiments).fill([]).map(() => new Array(response.data.components + 1).fill(0)),
@@ -47,15 +47,20 @@ const InputTablePage:FC = () => {
       fetchData();
     }, []);
 
-    const methods = [{ value: 'EULER', label: 'Метод Эйлера' },
-                    { value: 'IMPLICIT_EULER', label: 'Неявный метод Эйлера' },
-                    { value: 'TRAPEZOID', label: 'Метод трапеций' },
-                    { value: 'MIDDLE', label: 'Метод средней точки' },
-                    { value: 'RK2', label: 'Метод Рунге-Кутты 2-го порядка' },
-                    { value: 'RK4', label: 'Метод Рунге-Кутты 4-го порядка' },
-                    { value: 'KM', label: 'Метод Кутты-Мерсона' },
-                    { value: 'RKF', label: 'Метод Рунге-Кутты-Фелберга' },
-                    { value: 'EXPLICIT_ADAMS', label: 'Явный двухшаговый метод Адамса' },]
+    const methods = [{ value: 'EXPLICIT_EULER', label: 'Явный метод Эйлера' },
+        { value: 'IMPLICIT_EULER', label: 'Неявный метод Эйлера' },
+        { value: 'SEMI_IMPLICIT_EULER', label: 'Полунеявный метод Эйлера'},
+        { value: 'TRAPEZOID', label: 'Метод трапеций' },
+        { value: 'MIDDLE', label: 'Метод средней точки' },
+        { value: 'EXPLICIT_RK2', label: 'Явный метод Рунге-Кутты 2-го порядка' },
+        { value: 'IMPLICIT_RK2', label: 'Неявный метод Рунге-Кутты 2-го порядка' },
+        { value: 'SEMI_IMPLICIT_RK2', label: 'Полунеявный метод Рунге-Кутты 2-го порядка'},
+        { value: 'EXPLICIT_RK4', label: 'Явный метод Рунге-Кутты 4-го порядка' },
+        { value: 'IMPLICIT_RK4', label: 'Неявный метод Рунге-Кутты 4-го порядка' },
+        { value: 'SEMI_IMPLICIT_RK4', label: 'Полунеявный метод Рунге-Кутты 4-го порядка' },
+        { value: 'KM', label: 'Метод Кутты-Мерсона' },
+        { value: 'RKF', label: 'Метод Рунге-Кутты-Фелберга' },
+        { value: 'EXPLICIT_ADAMS', label: 'Явный двухшаговый метод Адамса' },]
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
