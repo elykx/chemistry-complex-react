@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
 import {IResultData} from "../../entities/IResultData";
-import {resultDataURL} from "../../config";
+import {resultDataURL, saveResultDataURL} from "../../config";
 import {IResultNumber} from "../../entities/IResultNumber";
 import LineGraph from "../chart/Chart";
 import {useNavigate, useParams} from "react-router-dom";
@@ -56,7 +56,20 @@ const ResultPage: FC = () => {
         navigate(`/input-data/${tableId}`)
     }
 
-    console.log(resultArray?.input_data.experimental_data)
+    const SaveReport = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        const saveData = async () => {
+            const response = await axios.get(`${saveResultDataURL}${inputDataId}/`, { responseType: 'blob' });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const disposition = response.headers['content-disposition'];
+            const filename = disposition ? disposition.split(';')[1].split('filename=')[1].trim() : 'Report.xlsx';
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+        };
+        saveData();
+    }
 
     return (
         <div>
@@ -80,6 +93,11 @@ const ResultPage: FC = () => {
                     <button className=" border border-black bg-white text-black text-sm rounded-lg py-1 px-2
                         hover:bg-lightGreen hover:text-white"
                             onClick={NavigateToInput}>Провести оценку чувствительности</button>
+                </div>
+                <div className='m-2'>
+                    <button className=" border border-black bg-white text-black text-sm rounded-lg py-1 px-2
+                        hover:bg-lightGreen hover:text-white"
+                            onClick={SaveReport}>Сохранить отчёт</button>
                 </div>
             </div>
             <div className="flex">
