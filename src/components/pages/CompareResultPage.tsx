@@ -244,7 +244,7 @@ const CompareResultPage:FC = () => {
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`}>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Экспериментальные значения</label>
                         <ExperimentalPointTable resultArray={JSON.parse(String(resultDataOne.input_data.experimental_data))}/>
-                        <label className="block text-blackGreen font-medium mt-2 mb-2">Рассчетные значения в экспериментальных точках</label>
+                        <label className="block text-blackGreen font-medium mt-2 mb-2">Расчетные значения в экспериментальных точках</label>
                         <ExperimentalPointTable resultArray={resultDataOne.experimental_point}/>
                     </div>
                 </div>
@@ -262,7 +262,7 @@ const CompareResultPage:FC = () => {
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`}>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Экспериментальные значения</label>
                         <ExperimentalPointTable resultArray={JSON.parse(String(resultDataTwo.input_data.experimental_data))}/>
-                        <label className="block text-blackGreen font-medium mt-2 mb-2">Рассчетные значения в экспериментальных точках</label>
+                        <label className="block text-blackGreen font-medium mt-2 mb-2">Расчетные значения в экспериментальных точках</label>
                         <ExperimentalPointTable resultArray={resultDataTwo.experimental_point}/>
                     </div>
                 </div>

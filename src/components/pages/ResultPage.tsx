@@ -105,7 +105,7 @@ const ResultPage: FC = () => {
                     <div>
                         <button className=" border border-black bg-white text-black text-sm rounded-lg py-2 px-4
                         hover:bg-lightGreen hover:text-white"
-                                onClick={() => setTableIsCollapsed(!tableIsCollapsed)}>Скрыть/показать решение</button>
+                                onClick={() => setTableIsCollapsed(!tableIsCollapsed)}>Свернуть/развернуть решение</button>
                     </div>
                     <div className={`${tableIsCollapsed ? 'w-5/6 ' : 'w-1/5'} py-2 px-2 transition duration-300 ease-in-out`} >
                         { resultArray ? <ResultTable result={resultArray.result} time={resultArray.time}/> : <div>No data</div> }
@@ -128,7 +128,7 @@ const ResultPage: FC = () => {
                     <div className={`${expDataIsCollapsed ? 'block' : 'hidden'} py-2 px-2 transition duration-300 ease-in-out`}>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Экспериментальные значения</label>
                         <ExperimentalPointTable resultArray={resultArray.input_data.experimental_data}/>
-                        <label className="block text-blackGreen font-medium mt-2 mb-2">Рассчетные значения в экспериментальных точках</label>
+                        <label className="block text-blackGreen font-medium mt-2 mb-2">Расчетные значения в экспериментальных точках</label>
                         <ExperimentalPointTable resultArray={resultArray.experimental_point}/>
                     </div>: 'loading...'}
                 </div>

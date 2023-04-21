@@ -12,7 +12,7 @@ const ResultTable:FC<Props> = ({result, time}) => {
             <table className={`py-2 px-2 transition duration-300 ease-in-out`}>
                 <thead>
                 <tr>
-                    <th className="font-medium text-sm text-white border-2 border-blackGreen bg-lightGreen">Время</th>
+                    <th className="font-medium text-sm text-white border-2 border-blackGreen bg-lightGreen">Время, с</th>
                     {result[0].map((i, index) => (
                         <th className="font-medium text-sm text-white border-2 border-blackGreen bg-lightGreen"
                             key={index}> C {index + 1}</th>

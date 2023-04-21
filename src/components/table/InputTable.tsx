@@ -35,7 +35,7 @@ const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText,onChan
                     </td>
                     {row.map((cell, j) => (
                         <td className="font-medium text-sm border-2 border-blackGreen" key={j}>
-                            <input className="w-12"
+                            <input className="w-14"
                                    type="number"
                                    value={dataName === 'experimental_data' || dataName === 'constants_speed' ? cell : cell !== 0 ? cell: ''}
                                    onChange={(e)=>onChange(e,i,j)}

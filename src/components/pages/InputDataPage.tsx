@@ -96,7 +96,7 @@ const InputTablePage:FC = () => {
         <div className="flex">
             <form className="w-1/5 p-4 bg-darkGreen" onSubmit={handleSubmit}>
                 <label className="block font-medium mb-2">
-                    <span className="text-white text-sm">Начальное время:</span>
+                    <span className="text-white text-sm">Начальное время, с:</span>
                     <InputNumber value={inputData.initial_time}
                                  onChange={e => setInputData({ ...inputData, initial_time: e.target.valueAsNumber })}
                                  min={0}
@@ -104,7 +104,7 @@ const InputTablePage:FC = () => {
                                  step="any"/>
                 </label>
                 <label className="block font-medium mb-2">
-                    <span className="text-white text-sm">Время:</span>
+                    <span className="text-white text-sm">Время, с:</span>
                     <InputNumber value={inputData.time}
                                  onChange={e => setInputData({ ...inputData, time: e.target.valueAsNumber })}
                                  min={0}
@@ -112,7 +112,7 @@ const InputTablePage:FC = () => {
                                  step="any"/>
                 </label>
                 <label className="block font-medium mb-2">
-                    <span className="text-white text-sm">Шаг:</span>
+                    <span className="text-white text-sm">Шаг, с:</span>
                     <InputNumber value={inputData.step}
                                  onChange={e => setInputData({ ...inputData, step: e.target.valueAsNumber })}
                                  min={0}

@@ -47,6 +47,20 @@ const LineGraph: FC<{ data: IResultNumber }> = ({ data }) => {
         radius: 1,
         hoverRadius:2,
         borderWidth: 2,
+        scales: {
+            y: {
+                title:{
+                    display: true,
+                    text: "Концентрация, моль/л"
+                }
+            },
+            x: {
+                title:{
+                    display: true,
+                    text: "Время, с"
+                }
+            }
+        },
         plugins: {
             legend: {
                 position: 'right' as const,
