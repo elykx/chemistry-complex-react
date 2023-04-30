@@ -38,7 +38,7 @@ const InputTablePage:FC = () => {
                   step: 0,
                   method: "EXPLICIT_EULER",
                   matrix_stechiometric_coefficients: Array(response.data.stages).fill([]).map(() => new Array(response.data.components).fill(0)),
-                  matrix_indicators: Array(response.data.stages).fill([]).map(() => new Array(response.data.components).fill(0)),
+                  matrix_indicators: Array(response.data.stages).fill([]).map(() => new Array(response.data.components).fill(-1)),
                   experimental_data: Array(response.data.experiments).fill([]).map(() => new Array(response.data.components + 1).fill(0)),
                   constants_speed: Array(response.data.stages).fill([]).map(() => new Array(1).fill(0)),
               })
@@ -163,13 +163,13 @@ const InputTablePage:FC = () => {
 
                 <label className="block text-blackGreen font-medium mt-2 mb-2">Матрица показателей степени</label>
                 <InputTable
-                    firstRow={['Номер стадии', ...Array(inputData.table_parameters.components).fill(0).map((_, i) =>
+                    firstRow={['Номер стадии', ...Array(inputData.table_parameters.components).fill(-1).map((_, i) =>
                         `С${i + 1}`)]}
                     inputDataArray={inputData.matrix_indicators}
                     firstColumnText=""
                     dataName='matrix_indicators'
                     onChange={(e, row, col) => {
-                        if (Number(e.target.value) >= 0 && Number(e.target.value) <= 10) {
+                        if (Number(e.target.value) >= -1 && Number(e.target.value) <= 10) {
                             setInputData((prevData) => {
                                 const updatedData = {...prevData};
                                 updatedData.matrix_indicators[row][col] = Number(e.target.value);

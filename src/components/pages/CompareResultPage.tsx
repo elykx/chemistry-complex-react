@@ -159,6 +159,7 @@ const CompareResultPage:FC = () => {
                     time: JSON.parse(response.data.time),
                     result: JSON.parse(response.data.result),
                     experimental_point: JSON.parse(response.data.experimental_point),
+                    error_exp_point: JSON.parse(response.data.error_exp_point),
                 })
             }
             if (inputDataTwoId){
@@ -178,6 +179,7 @@ const CompareResultPage:FC = () => {
                     time: JSON.parse(response.data.time),
                     result: JSON.parse(response.data.result),
                     experimental_point: JSON.parse(response.data.experimental_point),
+                    error_exp_point: JSON.parse(response.data.error_exp_point),
                 })
             }
 
@@ -246,6 +248,8 @@ const CompareResultPage:FC = () => {
                         <ExperimentalPointTable resultArray={JSON.parse(String(resultDataOne.input_data.experimental_data))}/>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Расчетные значения в экспериментальных точках</label>
                         <ExperimentalPointTable resultArray={resultDataOne.experimental_point}/>
+                        <label className="block text-blackGreen font-medium mt-2 mb-2">Погрешность в экспериментальных точках</label>
+                        <ExperimentalPointTable resultArray={resultDataOne.error_exp_point}/>
                     </div>
                 </div>
                 <div className={`${secondIsCollapsed ? 'w-5/6 ' : 'w-1/5'} border-2 overflow-x-auto max-w-screen-lg p-4 bg-white `}>
@@ -264,6 +268,8 @@ const CompareResultPage:FC = () => {
                         <ExperimentalPointTable resultArray={JSON.parse(String(resultDataTwo.input_data.experimental_data))}/>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Расчетные значения в экспериментальных точках</label>
                         <ExperimentalPointTable resultArray={resultDataTwo.experimental_point}/>
+                        <label className="block text-blackGreen font-medium mt-2 mb-2">Погрешность в экспериментальных точках</label>
+                        <ExperimentalPointTable resultArray={resultDataTwo.error_exp_point}/>
                     </div>
                 </div>
             </div> : '..loading'}

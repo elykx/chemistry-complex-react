@@ -40,6 +40,7 @@ const ResultPage: FC = () => {
                     time: JSON.parse(response.data.time),
                     result: JSON.parse(response.data.result),
                     experimental_point: JSON.parse(response.data.experimental_point),
+                    error_exp_point: JSON.parse(response.data.error_exp_point),
                 })
                 let data = response.data as any;
                 await setTableId(data.input_data.table_parameters.id)
@@ -130,6 +131,8 @@ const ResultPage: FC = () => {
                         <ExperimentalPointTable resultArray={resultArray.input_data.experimental_data}/>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Расчетные значения в экспериментальных точках</label>
                         <ExperimentalPointTable resultArray={resultArray.experimental_point}/>
+                        <label className="block text-blackGreen font-medium mt-2 mb-2">Погрешность в экспериментальных точках</label>
+                        <ExperimentalPointTable resultArray={resultArray.error_exp_point}/>
                     </div>: 'loading...'}
                 </div>
             </div>

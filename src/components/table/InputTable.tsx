@@ -37,7 +37,14 @@ const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText,onChan
                         <td className="font-medium text-sm border-2 border-blackGreen" key={j}>
                             <input className="w-14"
                                    type="number"
-                                   value={dataName === 'experimental_data' || dataName === 'constants_speed' ? cell : cell !== 0 ? cell: ''}
+                                   value={
+                                    dataName === 'experimental_data' || dataName === 'constants_speed'
+                                    ? cell
+                                    : dataName === 'matrix_indicators' && cell === -1
+                                    ? ''
+                                    : dataName === 'matrix_stechiometric_coefficients' && cell === 0
+                                    ? ''
+                                    : cell}
                                    onChange={(e)=>onChange(e,i,j)}
                             />
                         </td>

@@ -5,4 +5,5 @@ export interface IResultNumber{
     result: number[][]
     time: number[]
     experimental_point: number[][]
+    error_exp_point: number[][]
 }
