@@ -15,7 +15,7 @@ const ResultTable:FC<Props> = ({result, time}) => {
                     <th className="font-medium text-sm text-white border-2 border-blackGreen bg-lightGreen">Время, с</th>
                     {result[0].map((i, index) => (
                         <th className="font-medium text-sm text-white border-2 border-blackGreen bg-lightGreen"
-                            key={index}> C {index + 1}</th>
+                            key={index}> C{index + 1}, моль/л</th>
                     ))}
                 </tr>
                 </thead>

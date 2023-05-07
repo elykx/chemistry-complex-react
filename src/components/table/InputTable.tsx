@@ -34,8 +34,8 @@ const InputTable:FC<Props> = ({ firstRow, inputDataArray, firstColumnText,onChan
                         {`${firstColumnText} ${i + 1}`}
                     </td>
                     {row.map((cell, j) => (
-                        <td className="font-medium text-sm border-2 border-blackGreen" key={j}>
-                            <input className="w-14"
+                        <td className="font-medium text-sm border-2 border-blackGreen" key={j} >
+                            <input className={` ${dataName === 'constants_speed' ? 'w-50' : 'w-14'}`}
                                    type="number"
                                    value={
                                     dataName === 'experimental_data' || dataName === 'constants_speed'

@@ -44,30 +44,42 @@ const LineGraph: FC<{ data: IResultNumber }> = ({ data }) => {
 
     const options = {
         responsive: true,
-        radius: 1,
-        hoverRadius:2,
+        radius: 0,
+        hoverRadius:3,
         borderWidth: 2,
         scales: {
             y: {
                 title:{
                     display: true,
                     text: "Концентрация, моль/л"
+                },
+                min: 0,
+                ticks: {
+                    beginAtZero: true,
+                    precision: 0,
+                    min: 0,
                 }
             },
             x: {
                 title:{
                     display: true,
                     text: "Время, с"
-                }
+                },
+                min: data.time[0]
             }
+
         },
         plugins: {
             legend: {
                 position: 'right' as const,
+                labels: {
+                  boxWidth:20,
+                    boxHeight:1,
+                },
             },
             title: {
                 display: true,
-                text: 'График системы ОДУ',
+                text: 'Зависимость концентраций от времени',
             },
         },
     };

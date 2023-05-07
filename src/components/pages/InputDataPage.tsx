@@ -100,7 +100,7 @@ const InputTablePage:FC = () => {
                     <InputNumber value={inputData.initial_time}
                                  onChange={e => setInputData({ ...inputData, initial_time: e.target.valueAsNumber })}
                                  min={0}
-                                 max={1000}
+                                 max={999999}
                                  step="any"/>
                 </label>
                 <label className="block font-medium mb-2">
@@ -108,7 +108,7 @@ const InputTablePage:FC = () => {
                     <InputNumber value={inputData.time}
                                  onChange={e => setInputData({ ...inputData, time: e.target.valueAsNumber })}
                                  min={0}
-                                 max={1000}
+                                 max={999999}
                                  step="any"/>
                 </label>
                 <label className="block font-medium mb-2">
@@ -116,8 +116,8 @@ const InputTablePage:FC = () => {
                     <InputNumber value={inputData.step}
                                  onChange={e => setInputData({ ...inputData, step: e.target.valueAsNumber })}
                                  min={0}
-                                 max={1000}
-                                 step={0.000001}/>
+                                 max={999999}
+                                 step="any"/>
                 </label>
                 <label className="block font-medium mb-2">
                     <span className="text-white text-sm">Метод:</span>
@@ -127,7 +127,7 @@ const InputTablePage:FC = () => {
                 </label>
                 <label className="block font-medium mb-2 py-2">
                     <button className="bg-white text-black rounded-lg py-2 px-4 w-full
-                    hover:bg-blackGreen hover:text-white" type="submit">Далее</button>
+                    hover:bg-blackGreen hover:text-white" type="submit">Решение</button>
                 </label>
             </form>
 
