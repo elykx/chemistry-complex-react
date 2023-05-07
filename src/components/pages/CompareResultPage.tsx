@@ -9,8 +9,15 @@ import {IResultNumber} from "../../entities/IResultNumber";
 import LineGraph from "../chart/Chart";
 import ExperimentalPointTable from "../table/ExperimentalPointTable";
 import ResultTable from "../table/ResultTable";
+import ErrorModal from "../modals/ErrorModal";
 
 const CompareResultPage:FC = () => {
+
+    const [isModalOpenOne, setIsModalOpenOne] = useState(false);
+    const [errorTextOne, setErrorTextOne] = useState("");
+
+    const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
+    const [errorTextTwo, setErrorTextTwo] = useState("");
 
     const {inputDataId} = useParams();
 
@@ -109,7 +116,8 @@ const CompareResultPage:FC = () => {
                     await setInputDataOneId(data.input_data.id)
 
                 } catch (error) {
-                    console.error('Error:', error);
+                    setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
                 }
 
                 try {
@@ -133,7 +141,8 @@ const CompareResultPage:FC = () => {
                     const data = await response.json()
                     await setInputDataTwoId(data.input_data.id)
                 } catch (error) {
-                    console.error('Error:', error);
+                    setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
                 }
             }
         };
@@ -143,49 +152,72 @@ const CompareResultPage:FC = () => {
 
         const fetchData = async () => {
             if (inputDataOneId){
-                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataOneId}/`);
-                await setResultDataOne({
-                    input_data:{
-                        table_parameters: response.data.input_data.table_parameters,
-                        initial_time: JSON.parse(String(response.data.input_data.initial_time)),
-                        time: JSON.parse(String(response.data.input_data.time)),
-                        step: JSON.parse(String(response.data.input_data.step)),
-                        method: response.data.input_data.method,
-                        matrix_stechiometric_coefficients: JSON.parse(String(response.data.input_data.matrix_stechiometric_coefficients)),
-                        matrix_indicators: JSON.parse(String(response.data.input_data.matrix_indicators)),
-                        experimental_data: JSON.parse(String(response.data.input_data.experimental_data)),
-                        constants_speed: JSON.parse(String(response.data.input_data.constants_speed)),
-                    },
-                    time: JSON.parse(response.data.time),
-                    result: JSON.parse(response.data.result),
-                    experimental_point: JSON.parse(response.data.experimental_point),
-                    error_exp_point: JSON.parse(response.data.error_exp_point),
-                })
+                try {
+                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataOneId}/`);
+                    await setResultDataOne({
+                        input_data:{
+                            table_parameters: response.data.input_data.table_parameters,
+                            initial_time: JSON.parse(String(response.data.input_data.initial_time)),
+                            time: JSON.parse(String(response.data.input_data.time)),
+                            step: JSON.parse(String(response.data.input_data.step)),
+                            method: response.data.input_data.method,
+                            matrix_stechiometric_coefficients: JSON.parse(String(response.data.input_data.matrix_stechiometric_coefficients)),
+                            matrix_indicators: JSON.parse(String(response.data.input_data.matrix_indicators)),
+                            experimental_data: JSON.parse(String(response.data.input_data.experimental_data)),
+                            constants_speed: JSON.parse(String(response.data.input_data.constants_speed)),
+                        },
+                        time: JSON.parse(response.data.time),
+                        result: JSON.parse(response.data.result),
+                        experimental_point: JSON.parse(response.data.experimental_point),
+                        error_exp_point: JSON.parse(response.data.error_exp_point),
+                    })
+                }
+                catch (error){
+                    setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
+                }
             }
             if (inputDataTwoId){
-                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataTwoId}/`);
-                await setResultDataTwo({
-                    input_data:{
-                        table_parameters: response.data.input_data.table_parameters,
-                        initial_time: JSON.parse(String(response.data.input_data.initial_time)),
-                        time: JSON.parse(String(response.data.input_data.time)),
-                        step: JSON.parse(String(response.data.input_data.step)),
-                        method: response.data.input_data.method,
-                        matrix_stechiometric_coefficients: JSON.parse(String(response.data.input_data.matrix_stechiometric_coefficients)),
-                        matrix_indicators: JSON.parse(String(response.data.input_data.matrix_indicators)),
-                        experimental_data: JSON.parse(String(response.data.input_data.experimental_data)),
-                        constants_speed: JSON.parse(String(response.data.input_data.constants_speed)),
-                    },
-                    time: JSON.parse(response.data.time),
-                    result: JSON.parse(response.data.result),
-                    experimental_point: JSON.parse(response.data.experimental_point),
-                    error_exp_point: JSON.parse(response.data.error_exp_point),
-                })
+                try{
+                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataTwoId}/`);
+                    await setResultDataTwo({
+                        input_data:{
+                            table_parameters: response.data.input_data.table_parameters,
+                            initial_time: JSON.parse(String(response.data.input_data.initial_time)),
+                            time: JSON.parse(String(response.data.input_data.time)),
+                            step: JSON.parse(String(response.data.input_data.step)),
+                            method: response.data.input_data.method,
+                            matrix_stechiometric_coefficients: JSON.parse(String(response.data.input_data.matrix_stechiometric_coefficients)),
+                            matrix_indicators: JSON.parse(String(response.data.input_data.matrix_indicators)),
+                            experimental_data: JSON.parse(String(response.data.input_data.experimental_data)),
+                            constants_speed: JSON.parse(String(response.data.input_data.constants_speed)),
+                        },
+                        time: JSON.parse(response.data.time),
+                        result: JSON.parse(response.data.result),
+                        experimental_point: JSON.parse(response.data.experimental_point),
+                        error_exp_point: JSON.parse(response.data.error_exp_point),
+                    })
+                }
+                catch (error){
+                    setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
+                }
+
             }
 
         };
         fetchData();
     }
+
+    const handleCloseModalOne = () => {
+        setIsModalOpenOne(false);
+        setErrorTextOne("");
+    };
+
+    const handleCloseModalTwo = () => {
+        setIsModalOpenTwo(false);
+        setErrorTextTwo("");
+    };
 
     console.log(typeof resultDataOne?.input_data.experimental_data)
 
@@ -239,6 +271,11 @@ const CompareResultPage:FC = () => {
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setFirstIsCollapsed(!firstIsCollapsed)}>Скрыть/показать решение</button>
                     </div>
+                    <ErrorModal
+                        isOpen={isModalOpenOne}
+                        onClose={handleCloseModalOne}
+                        errorText={errorTextOne}
+                    />
                     <ResultTable result={resultDataOne.result} time={resultDataOne.time}/>
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`} style={{ width: "500px", height: "250px"}}>
                         <LineGraph data={resultDataOne} />
@@ -259,6 +296,11 @@ const CompareResultPage:FC = () => {
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setSecondIsCollapsed(!secondIsCollapsed)}>Скрыть/показать решение</button>
                     </div>
+                    <ErrorModal
+                        isOpen={isModalOpenTwo}
+                        onClose={handleCloseModalTwo}
+                        errorText={errorTextTwo}
+                    />
                     <ResultTable result={resultDataTwo.result} time={resultDataTwo?.time}/>
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`} style={{ width: "500px", height: "250px"}}>
                         <LineGraph data={resultDataTwo} />

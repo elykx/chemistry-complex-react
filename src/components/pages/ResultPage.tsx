@@ -7,9 +7,14 @@ import LineGraph from "../chart/Chart";
 import {useNavigate, useParams} from "react-router-dom";
 import ExperimentalPointTable from "../table/ExperimentalPointTable";
 import ResultTable from "../table/ResultTable";
+import Modal from "react-modal";
+import ErrorModal from "../modals/ErrorModal";
 
 const ResultPage: FC = () => {
     const navigate = useNavigate();
+
+    const [isModalOpen, setIsModalOpen] = useState(false); // состояние для открытия/закрытия модального окна
+    const [errorText, setErrorText] = useState(""); // состояние для текста ошибки
 
     const [resultArray, setResultArray] = useState<IResultNumber>();
     const [tableId, setTableId] = useState<number>();
@@ -23,29 +28,35 @@ const ResultPage: FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (inputDataId){
-                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataId}/`);
-                await setResultArray({
-                    input_data:{
-                        table_parameters: response.data.input_data.table_parameters,
-                        initial_time: JSON.parse(String(response.data.input_data.initial_time)),
-                        time: JSON.parse(String(response.data.input_data.time)),
-                        step: JSON.parse(String(response.data.input_data.step)),
-                        method: response.data.input_data.method,
-                        matrix_stechiometric_coefficients: JSON.parse(String(response.data.input_data.matrix_stechiometric_coefficients)),
-                        matrix_indicators: JSON.parse(String(response.data.input_data.matrix_indicators)),
-                        experimental_data: JSON.parse(String(response.data.input_data.experimental_data)),
-                        constants_speed: JSON.parse(String(response.data.input_data.constants_speed)),
-                    },
-                    time: JSON.parse(response.data.time),
-                    result: JSON.parse(response.data.result),
-                    experimental_point: JSON.parse(response.data.experimental_point),
-                    error_exp_point: JSON.parse(response.data.error_exp_point),
-                })
-                let data = response.data as any;
-                await setTableId(data.input_data.table_parameters.id)
-                await setInputId(data.input_data.id)
+            try {
+                if (inputDataId){
+                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataId}/`);
+                    await setResultArray({
+                        input_data:{
+                            table_parameters: response.data.input_data.table_parameters,
+                            initial_time: JSON.parse(String(response.data.input_data.initial_time)),
+                            time: JSON.parse(String(response.data.input_data.time)),
+                            step: JSON.parse(String(response.data.input_data.step)),
+                            method: response.data.input_data.method,
+                            matrix_stechiometric_coefficients: JSON.parse(String(response.data.input_data.matrix_stechiometric_coefficients)),
+                            matrix_indicators: JSON.parse(String(response.data.input_data.matrix_indicators)),
+                            experimental_data: JSON.parse(String(response.data.input_data.experimental_data)),
+                            constants_speed: JSON.parse(String(response.data.input_data.constants_speed)),
+                        },
+                        time: JSON.parse(response.data.time),
+                        result: JSON.parse(response.data.result),
+                        experimental_point: JSON.parse(response.data.experimental_point),
+                        error_exp_point: JSON.parse(response.data.error_exp_point),
+                    })
+                    let data = response.data as any;
+                    await setTableId(data.input_data.table_parameters.id)
+                    await setInputId(data.input_data.id)
+                }
             }
+            catch (error){
+                    setErrorText(`Невозможно произвести расчет интеграла. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpen(true);
+                }
         };
         fetchData();
     }, []);
@@ -71,6 +82,11 @@ const ResultPage: FC = () => {
         };
         saveData();
     }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false); // закрываем модальное окно
+        setErrorText(""); // сбрасываем текст ошибки
+    };
 
     return (
         <div>
@@ -102,6 +118,11 @@ const ResultPage: FC = () => {
                 </div>
             </div>
             <div className="flex">
+                <ErrorModal
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    errorText={errorText}
+                />
                 <div className={`${tableIsCollapsed ? 'w-5/6 ' : 'w-1/5'} overflow-x-auto max-w-screen-lg  p-4 bg-white `}>
                     <div>
                         <button className=" border border-black bg-white text-black text-sm rounded-lg py-2 px-4
@@ -131,9 +152,9 @@ const ResultPage: FC = () => {
                         <ExperimentalPointTable resultArray={resultArray.input_data.experimental_data}/>
                         <label className="block text-blackGreen font-medium mt-2 mb-2">Расчетные значения в экспериментальных точках</label>
                         <ExperimentalPointTable resultArray={resultArray.experimental_point}/>
-                        <label className="block text-blackGreen font-medium mt-2 mb-2">Погрешность в экспериментальных точках</label>
+                        <label className="block text-blackGreen font-medium mt-2 mb-2">Относительная погрешность в экспериментальных точках, %</label>
                         <ExperimentalPointTable resultArray={resultArray.error_exp_point}/>
-                    </div>: 'loading...'}
+                    </div>: 'No data'}
                 </div>
             </div>
         </div>
