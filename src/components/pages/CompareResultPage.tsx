@@ -15,9 +15,11 @@ const CompareResultPage:FC = () => {
 
     const [isModalOpenOne, setIsModalOpenOne] = useState(false);
     const [errorTextOne, setErrorTextOne] = useState("");
+    const [errorTextValueOne, setErrorTextValueOne] = useState("");
 
     const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
     const [errorTextTwo, setErrorTextTwo] = useState("");
+    const [errorTextValueTwo, setErrorTextValueTwo] = useState("");
 
     const {inputDataId} = useParams();
 
@@ -171,6 +173,25 @@ const CompareResultPage:FC = () => {
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
                     })
+
+                    let hasNegativeValues = false;
+                    for (let i = 0; i < resultDataOne!.result.length; i++) {
+                        for (let j = 0; j < resultDataOne!.result[i].length; j++) {
+                            if (resultDataOne!.result[i][j] < 0) {
+                                hasNegativeValues = true;
+                                break;
+                            }
+                        }
+                        if (hasNegativeValues) {
+                            break;
+                        }
+                    }
+                    if (hasNegativeValues) {
+                        setErrorTextValueOne(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
+                    }
+                    else {
+                        setErrorTextValueTwo('');
+                    }
                 }
                 catch (error){
                     setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
@@ -197,6 +218,25 @@ const CompareResultPage:FC = () => {
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
                     })
+
+                    let hasNegativeValues = false;
+                    for (let i = 0; i < resultDataTwo!.result.length; i++) {
+                        for (let j = 0; j < resultDataTwo!.result[i].length; j++) {
+                            if (resultDataTwo!.result[i][j] < 0) {
+                                hasNegativeValues = true;
+                                break;
+                            }
+                        }
+                        if (hasNegativeValues) {
+                            break;
+                        }
+                    }
+                    if (hasNegativeValues) {
+                        setErrorTextValueTwo(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
+                    }
+                    else {
+                        setErrorTextValueTwo('');
+                    }
                 }
                 catch (error){
                     setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
@@ -226,15 +266,20 @@ const CompareResultPage:FC = () => {
         { value: 'SEMI_IMPLICIT_EULER', label: 'Полунеявный метод Эйлера'},
         { value: 'TRAPEZOID', label: 'Метод трапеций' },
         { value: 'MIDDLE', label: 'Метод средней точки' },
-        { value: 'EXPLICIT_RK2', label: 'Явный метод Рунге-Кутты 2-го порядка' },
-        { value: 'IMPLICIT_RK2', label: 'Неявный метод Рунге-Кутты 2-го порядка' },
-        { value: 'SEMI_IMPLICIT_RK2', label: 'Полунеявный метод Рунге-Кутты 2-го порядка'},
-        { value: 'EXPLICIT_RK4', label: 'Явный метод Рунге-Кутты 4-го порядка' },
-        { value: 'IMPLICIT_RK4', label: 'Неявный метод Рунге-Кутты 4-го порядка' },
-        { value: 'SEMI_IMPLICIT_RK4', label: 'Полунеявный метод Рунге-Кутты 4-го порядка' },
-        { value: 'KM', label: 'Метод Кутты-Мерсона' },
-        { value: 'RKF', label: 'Метод Рунге-Кутты-Фелберга' },
+        { value: 'EXPLICIT_RK2', label: 'Явный метод Рунге-Кутта 2-го порядка' },
+        { value: 'IMPLICIT_RK2', label: 'Неявный метод Рунге-Кутта 2-го порядка' },
+        { value: 'SEMI_IMPLICIT_RK2', label: 'Полунеявный метод Рунге-Кутта 2-го порядка'},
+        { value: 'EXPLICIT_RK4', label: 'Явный метод Рунге-Кутта 4-го порядка' },
+        { value: 'IMPLICIT_RK4', label: 'Неявный метод Рунге-Кутта 4-го порядка' },
+        { value: 'SEMI_IMPLICIT_RK4', label: 'Полунеявный метод Рунге-Кутта 4-го порядка' },
+        { value: 'KM', label: 'Метод Рунге-Кутта-Мерсона' },
+        { value: 'RKF', label: 'Метод Рунге-Кутта-Фелберга' },
         { value: 'EXPLICIT_ADAMS', label: 'Явный двухшаговый метод Адамса' },]
+
+    const selectedMethodOne = methods.find(method => method.value === resultDataOne?.input_data.method);
+    const methodLabelOne = selectedMethodOne ? selectedMethodOne.label : '';
+    const selectedMethodTwo = methods.find(method => method.value === resultDataTwo?.input_data.method);
+    const methodLabelTwo = selectedMethodTwo ? selectedMethodTwo.label : '';
 
     return (
         <div>
@@ -265,7 +310,8 @@ const CompareResultPage:FC = () => {
             {resultDataOne !== undefined && resultDataTwo !== undefined ?
             <div className="flex">
                 <div className={`${firstIsCollapsed ? 'w-5/6 ' : 'w-1/5'} border-2 overflow-x-auto max-w-screen-lg p-4 bg-white `}>
-                    <p className=" border-2 text-center">${resultDataOne.input_data.method}</p>
+                    <p className=" border-2 text-center">{methodLabelOne}</p>
+                    <h1>{errorTextValueOne}</h1>
                     <div>
                         <button className=" border border-black bg-white text-black text-sm rounded-lg m-2  py-2 px-4
                         hover:bg-lightGreen hover:text-white"
@@ -291,7 +337,8 @@ const CompareResultPage:FC = () => {
                 </div>
                 <div className={`${secondIsCollapsed ? 'w-5/6 ' : 'w-1/5'} border-2 overflow-x-auto max-w-screen-lg p-4 bg-white `}>
                     <div>
-                        <p className=" border-2 text-center" >${resultDataTwo.input_data.method}</p>
+                        <p className=" border-2 text-center" >{methodLabelTwo}</p>
+                        <h1>{errorTextValueTwo}</h1>
                         <button className=" border border-black bg-white text-black text-sm rounded-lg m-2 py-2 px-4
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setSecondIsCollapsed(!secondIsCollapsed)}>Скрыть/показать решение</button>

@@ -11,10 +11,13 @@ import Modal from "react-modal";
 import ErrorModal from "../modals/ErrorModal";
 
 const ResultPage: FC = () => {
+
+    Modal.setAppElement('#root');
     const navigate = useNavigate();
 
-    const [isModalOpen, setIsModalOpen] = useState(false); // состояние для открытия/закрытия модального окна
-    const [errorText, setErrorText] = useState(""); // состояние для текста ошибки
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [errorText, setErrorText] = useState("");
+    const [errorTextValue, setErrorTextValue] = useState("");
 
     const [resultArray, setResultArray] = useState<IResultNumber>();
     const [tableId, setTableId] = useState<number>();
@@ -51,6 +54,21 @@ const ResultPage: FC = () => {
                     let data = response.data as any;
                     await setTableId(data.input_data.table_parameters.id)
                     await setInputId(data.input_data.id)
+                }
+                let hasNegativeValues = false;
+                for (let i = 0; i < resultArray!.result.length; i++) {
+                    for (let j = 0; j < resultArray!.result[i].length; j++) {
+                        if (resultArray!.result[i][j] < 0) {
+                            hasNegativeValues = true;
+                            break;
+                        }
+                    }
+                    if (hasNegativeValues) {
+                        break;
+                    }
+                }
+                if (hasNegativeValues) {
+                    setErrorTextValue(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
                 }
             }
             catch (error){
@@ -125,6 +143,7 @@ const ResultPage: FC = () => {
                 />
                 <div className={`${tableIsCollapsed ? 'w-5/6 ' : 'w-1/5'} overflow-x-auto max-w-screen-lg  p-4 bg-white `}>
                     <div>
+                        <h1>{errorTextValue}</h1>
                         <button className=" border border-black bg-white text-black text-sm rounded-lg py-2 px-4
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setTableIsCollapsed(!tableIsCollapsed)}>Свернуть/развернуть решение</button>

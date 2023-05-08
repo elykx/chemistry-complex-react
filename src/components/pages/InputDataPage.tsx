@@ -133,9 +133,9 @@ const InputTablePage:FC = () => {
 
             { inputData.table_parameters.components ?
             <form className="overflow-x-auto max-w-screen-lg w-4/5 p-4 bg-white">
-                <label className="text-blackGreen font-medium text-xs">
-                    <p>*-заполните таблицы</p>
-                </label>
+                <h1 className="text-blackGreen font-medium">
+                    Заполните таблицы
+                </h1>
                 <label className="text-blackGreen font-medium text-xs">
                     <p>Количество компонентов: {inputData.table_parameters.components}</p>
                     <p>Количество стадий: {inputData.table_parameters.stages}</p>
