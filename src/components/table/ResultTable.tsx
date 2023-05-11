@@ -22,10 +22,10 @@ const ResultTable:FC<Props> = ({result, time}) => {
                 <tbody>
                 {time.map((time, timeIndex) => (
                     <tr key={timeIndex}>
-                        <td className="font-medium text-sm border-2 border-blackGreen">{time}</td>
+                        <td className="font-medium text-sm border-2 border-blackGreen">{time.toString().replace(".", ",")}</td>
                         {result[0].map((_, colIndex) => (
                             <td className="font-medium text-sm border-2 border-blackGreen"
-                                key={colIndex}>{result.map(row => row[colIndex])[timeIndex]}</td>
+                                key={colIndex}>{result.map(row => row[colIndex])[timeIndex].toString().replace(".", ",")}</td>
                         ))}
                     </tr>
                 ))}

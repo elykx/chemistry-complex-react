@@ -11,7 +11,6 @@ import {
     Legend,
 } from 'chart.js';
 import {IResultNumber} from "../../entities/IResultNumber";
-
 const LineGraph: FC<{ data: IResultNumber }> = ({ data }) => {
 
     ChartJS.register(
@@ -25,18 +24,30 @@ const LineGraph: FC<{ data: IResultNumber }> = ({ data }) => {
     );
 
     const colors = [
-        '#FF5733', '#b0745c', '#ff008c', '#FFFF00', '#1E90FF',
-        '#8B4513', '#2E8B57', '#6A5ACD', '#228B22', '#FF6347',
-        '#006400', '#8B008B', '#8B0000', '#9400D3', '#FF00FF',
+        '#ff2d00', '#916857', '#ff008c', '#ffff00', '#FF00FF',
+        '#502c14', '#00ff6f', '#2400ff', '#033403', '#FF6347',
+        '#ff0000', '#00ffd1', '#b700ff', '#ff00f2', '#1E90FF',
         '#00FF7F', '#3CB371', '#00FF00', '#FFD700', '#40E0D0',
     ];
 
+    const lines = [
+        [], [1, 1], [15, 3, 3, 3], [10, 10], [20, 5],
+        [5, 5], [5, 5, 5, 3], [15, 5, 5, 5], [20, 3, 3, 3, 3, 3, 3, 3], [12, 3, 3],
+        [2, 2], [3, 13], [15, 10], [10, 10], [20, 5],
+        [15, 3, 3, 3], [5, 5, 5, 3], [15, 5, 5, 5], [20, 3, 3, 3, 3, 3, 3, 3], [12, 3, 3],
+    ];
+
+
+
     const chartData = {
-        labels: data.time,
+        labels: data.time.map(value => {
+            return value.toFixed(value % 1 !== 0 ? 1 : 0).toString().replace(".", ","); // округляем до 1 знака после запятой, если число не является целым
+        }),
         datasets: data.result[0].map((_, i) => ({
         label: `C${i + 1}`,
         data: data.result.map(row => row[i]),
         borderColor: colors[i],
+        borderDash: lines[i],
         fill: false,
         })),
 
@@ -65,7 +76,9 @@ const LineGraph: FC<{ data: IResultNumber }> = ({ data }) => {
                     display: true,
                     text: "Время, с"
                 },
-                min: data.time[0]
+                min: data.time[0],
+                ticks: {
+                }
             }
 
         },
@@ -74,7 +87,7 @@ const LineGraph: FC<{ data: IResultNumber }> = ({ data }) => {
                 position: 'right' as const,
                 labels: {
                   boxWidth:20,
-                    boxHeight:1,
+                    boxHeight:2,
                 },
             },
             title: {
