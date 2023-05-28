@@ -50,6 +50,7 @@ const ResultPage: FC = () => {
                         result: JSON.parse(response.data.result),
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
+                        runtime: response.data.runtime,
                     })
                     let data = response.data as any;
                     await setTableId(data.input_data.table_parameters.id)
@@ -148,6 +149,7 @@ const ResultPage: FC = () => {
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setTableIsCollapsed(!tableIsCollapsed)}>Свернуть/развернуть решение</button>
                     </div>
+                    <p className={`py-2 px-2`}>Время расчета: {resultArray?.runtime} секунд</p>
                     <div className={`${tableIsCollapsed ? 'w-5/6 ' : 'w-1/5'} py-2 px-2 transition duration-300 ease-in-out`} >
                         { resultArray ? <ResultTable result={resultArray.result} time={resultArray.time}/> : <div>No data</div> }
                     </div>

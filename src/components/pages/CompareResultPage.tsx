@@ -172,6 +172,7 @@ const CompareResultPage:FC = () => {
                         result: JSON.parse(response.data.result),
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
+                        runtime: response.data.runtime,
                     })
 
                     let hasNegativeValues = false;
@@ -217,6 +218,7 @@ const CompareResultPage:FC = () => {
                         result: JSON.parse(response.data.result),
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
+                        runtime: response.data.runtime,
                     })
 
                     let hasNegativeValues = false;
@@ -322,6 +324,7 @@ const CompareResultPage:FC = () => {
                         onClose={handleCloseModalOne}
                         errorText={errorTextOne}
                     />
+                    <p className={`py-2 px-2`}>Время расчета: {resultDataOne?.runtime} секунд</p>
                     <ResultTable result={resultDataOne.result} time={resultDataOne.time}/>
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`} style={{ width: "500px", height: "250px"}}>
                         <LineGraph data={resultDataOne} />
@@ -348,6 +351,7 @@ const CompareResultPage:FC = () => {
                         onClose={handleCloseModalTwo}
                         errorText={errorTextTwo}
                     />
+                    <p className={`py-2 px-2`}>Время расчета: {resultDataTwo?.runtime} секунд</p>
                     <ResultTable result={resultDataTwo.result} time={resultDataTwo?.time}/>
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`} style={{ width: "500px", height: "250px"}}>
                         <LineGraph data={resultDataTwo} />
