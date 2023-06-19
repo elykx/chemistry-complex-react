@@ -62,21 +62,24 @@ const ResultPage: FC = () => {
                 await setTableId(data.input_data.table_parameters.id)
                 await setInputId(data.input_data.id)
             }
-            let hasNegativeValues = false;
-            for (let i = 0; i < resultArray!.result.length; i++) {
-                for (let j = 0; j < resultArray!.result[i].length; j++) {
-                    if (resultArray!.result[i][j] < 0) {
-                        hasNegativeValues = true;
+            if (resultArray){
+               let hasNegativeValues = false;
+                for (let i = 0; i < resultArray!.result.length; i++) {
+                    for (let j = 0; j < resultArray!.result[i].length; j++) {
+                        if (resultArray!.result[i][j] < 0) {
+                            hasNegativeValues = true;
+                            break;
+                        }
+                    }
+                    if (hasNegativeValues) {
                         break;
                     }
                 }
                 if (hasNegativeValues) {
-                    break;
+                    setErrorTextValue(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
                 }
             }
-            if (hasNegativeValues) {
-                setErrorTextValue(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
-            }
+
 
         };
         fetchData();

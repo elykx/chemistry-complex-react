@@ -118,8 +118,7 @@ const CompareResultPage:FC = () => {
                     await setInputDataOneId(data.input_data.id)
 
                 } catch (error) {
-                    setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpenOne(true);
+
                 }
 
                 try {
@@ -143,8 +142,7 @@ const CompareResultPage:FC = () => {
                     const data = await response.json()
                     await setInputDataTwoId(data.input_data.id)
                 } catch (error) {
-                    setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpenOne(true);
+
                 }
             }
         };
@@ -180,6 +178,7 @@ const CompareResultPage:FC = () => {
                     setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
                     setIsModalOpenOne(true);
                 }
+                if (resultDataOne){
                     let hasNegativeValues = false;
                     for (let i = 0; i < resultDataOne!.result.length; i++) {
                         for (let j = 0; j < resultDataOne!.result[i].length; j++) {
@@ -198,7 +197,7 @@ const CompareResultPage:FC = () => {
                     else {
                         setErrorTextValueTwo('');
                     }
-
+                }
             }
             if (inputDataTwoId){
                 const response = await axios.get<IResultData>(`${resultDataURL}${inputDataTwoId}/`);
@@ -226,8 +225,8 @@ const CompareResultPage:FC = () => {
                     setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
                     setIsModalOpenOne(true);
                 }
-
-                    let hasNegativeValues = false;
+                if (resultDataTwo){
+                   let hasNegativeValues = false;
                     for (let i = 0; i < resultDataTwo!.result.length; i++) {
                         for (let j = 0; j < resultDataTwo!.result[i].length; j++) {
                             if (resultDataTwo!.result[i][j] < 0) {
@@ -245,7 +244,7 @@ const CompareResultPage:FC = () => {
                     else {
                         setErrorTextValueTwo('');
                     }
-
+                }
 
             }
 
