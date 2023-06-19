@@ -31,11 +31,12 @@ const ResultPage: FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                if (inputDataId){
-                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataId}/`);
+
+            if (inputDataId){
+                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataId}/`);
+                try {
                     await setResultArray({
-                        input_data:{
+                        input_data: {
                             table_parameters: response.data.input_data.table_parameters,
                             initial_time: JSON.parse(String(response.data.input_data.initial_time)),
                             time: JSON.parse(String(response.data.input_data.time)),
@@ -52,30 +53,31 @@ const ResultPage: FC = () => {
                         error_exp_point: JSON.parse(response.data.error_exp_point),
                         runtime: response.data.runtime,
                     })
-                    let data = response.data as any;
-                    await setTableId(data.input_data.table_parameters.id)
-                    await setInputId(data.input_data.id)
                 }
-                let hasNegativeValues = false;
-                for (let i = 0; i < resultArray!.result.length; i++) {
-                    for (let j = 0; j < resultArray!.result[i].length; j++) {
-                        if (resultArray!.result[i][j] < 0) {
-                            hasNegativeValues = true;
-                            break;
-                        }
-                    }
-                    if (hasNegativeValues) {
+                catch(error) {
+                        setErrorText(`Невозможно произвести расчет интеграла. Измените шаг интегрирования или входные данные.`);
+                        setIsModalOpen(true);
+                }
+                let data = response.data as any;
+                await setTableId(data.input_data.table_parameters.id)
+                await setInputId(data.input_data.id)
+            }
+            let hasNegativeValues = false;
+            for (let i = 0; i < resultArray!.result.length; i++) {
+                for (let j = 0; j < resultArray!.result[i].length; j++) {
+                    if (resultArray!.result[i][j] < 0) {
+                        hasNegativeValues = true;
                         break;
                     }
                 }
                 if (hasNegativeValues) {
-                    setErrorTextValue(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
+                    break;
                 }
             }
-            catch (error){
-                    setErrorText(`Невозможно произвести расчет интеграла. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpen(true);
-                }
+            if (hasNegativeValues) {
+                setErrorTextValue(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
+            }
+
         };
         fetchData();
     }, []);

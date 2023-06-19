@@ -154,8 +154,9 @@ const CompareResultPage:FC = () => {
 
         const fetchData = async () => {
             if (inputDataOneId){
+
+                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataOneId}/`);
                 try {
-                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataOneId}/`);
                     await setResultDataOne({
                         input_data:{
                             table_parameters: response.data.input_data.table_parameters,
@@ -174,7 +175,11 @@ const CompareResultPage:FC = () => {
                         error_exp_point: JSON.parse(response.data.error_exp_point),
                         runtime: response.data.runtime,
                     })
-
+                }
+                catch (error){
+                    setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
+                }
                     let hasNegativeValues = false;
                     for (let i = 0; i < resultDataOne!.result.length; i++) {
                         for (let j = 0; j < resultDataOne!.result[i].length; j++) {
@@ -193,15 +198,11 @@ const CompareResultPage:FC = () => {
                     else {
                         setErrorTextValueTwo('');
                     }
-                }
-                catch (error){
-                    setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpenOne(true);
-                }
+
             }
             if (inputDataTwoId){
+                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataTwoId}/`);
                 try{
-                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataTwoId}/`);
                     await setResultDataTwo({
                         input_data:{
                             table_parameters: response.data.input_data.table_parameters,
@@ -220,6 +221,11 @@ const CompareResultPage:FC = () => {
                         error_exp_point: JSON.parse(response.data.error_exp_point),
                         runtime: response.data.runtime,
                     })
+                }
+                catch (error){
+                    setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
+                }
 
                     let hasNegativeValues = false;
                     for (let i = 0; i < resultDataTwo!.result.length; i++) {
@@ -239,11 +245,7 @@ const CompareResultPage:FC = () => {
                     else {
                         setErrorTextValueTwo('');
                     }
-                }
-                catch (error){
-                    setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpenOne(true);
-                }
+
 
             }
 
@@ -261,7 +263,6 @@ const CompareResultPage:FC = () => {
         setErrorTextTwo("");
     };
 
-    console.log(typeof resultDataOne?.input_data.experimental_data)
 
     const methods = [{ value: 'EXPLICIT_EULER', label: 'Явный метод Эйлера' },
         { value: 'IMPLICIT_EULER', label: 'Неявный метод Эйлера' },
