@@ -28,7 +28,7 @@ const ExperimentalPointTable: FC<Props> = ({ resultArray }) => {
                     </td>
                     {row.map((cell, j) => (
                         <td className="font-medium text-sm border-2 border-blackGreen" key={j}>
-                            {cell}
+                            {cell.toString().replace(".", ",")}
                         </td>
                     ))}
                 </tr>

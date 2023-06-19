@@ -6,4 +6,5 @@ export interface IResultData{
     time: string
     experimental_point: string
     error_exp_point: string
+    runtime: number
 }

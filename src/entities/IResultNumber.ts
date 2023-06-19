@@ -6,4 +6,5 @@ export interface IResultNumber{
     time: number[]
     experimental_point: number[][]
     error_exp_point: number[][]
+    runtime: number
 }

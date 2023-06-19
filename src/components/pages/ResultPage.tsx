@@ -31,11 +31,12 @@ const ResultPage: FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                if (inputDataId){
-                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataId}/`);
+
+            if (inputDataId){
+                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataId}/`);
+                try {
                     await setResultArray({
-                        input_data:{
+                        input_data: {
                             table_parameters: response.data.input_data.table_parameters,
                             initial_time: JSON.parse(String(response.data.input_data.initial_time)),
                             time: JSON.parse(String(response.data.input_data.time)),
@@ -50,31 +51,33 @@ const ResultPage: FC = () => {
                         result: JSON.parse(response.data.result),
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
+                        runtime: response.data.runtime,
                     })
-                    let data = response.data as any;
-                    await setTableId(data.input_data.table_parameters.id)
-                    await setInputId(data.input_data.id)
                 }
-                let hasNegativeValues = false;
-                for (let i = 0; i < resultArray!.result.length; i++) {
-                    for (let j = 0; j < resultArray!.result[i].length; j++) {
-                        if (resultArray!.result[i][j] < 0) {
-                            hasNegativeValues = true;
-                            break;
-                        }
-                    }
-                    if (hasNegativeValues) {
+                catch(error) {
+                        setErrorText(`Невозможно произвести расчет интеграла. Измените шаг интегрирования или входные данные.`);
+                        setIsModalOpen(true);
+                }
+                let data = response.data as any;
+                await setTableId(data.input_data.table_parameters.id)
+                await setInputId(data.input_data.id)
+            }
+            let hasNegativeValues = false;
+            for (let i = 0; i < resultArray!.result.length; i++) {
+                for (let j = 0; j < resultArray!.result[i].length; j++) {
+                    if (resultArray!.result[i][j] < 0) {
+                        hasNegativeValues = true;
                         break;
                     }
                 }
                 if (hasNegativeValues) {
-                    setErrorTextValue(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
+                    break;
                 }
             }
-            catch (error){
-                    setErrorText(`Невозможно произвести расчет интеграла. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpen(true);
-                }
+            if (hasNegativeValues) {
+                setErrorTextValue(`В расчете интеграла присутствуют некорректные значения. Измените шаг интегрирования или входные данные.`);
+            }
+
         };
         fetchData();
     }, []);
@@ -152,6 +155,7 @@ const ResultPage: FC = () => {
                         hover:bg-lightGreen hover:text-white"
                                 onClick={() => setTableIsCollapsed(!tableIsCollapsed)}>Свернуть/развернуть решение</button>
                     </div>
+                    <p className={`py-2 px-2`}>Время расчета: {resultArray?.runtime} секунд</p>
                     <div className={`${tableIsCollapsed ? 'w-5/6 ' : 'w-1/5'} py-2 px-2 transition duration-300 ease-in-out`} >
                         { resultArray ? <ResultTable result={resultArray.result} time={resultArray.time}/> : <div>No data</div> }
                     </div>

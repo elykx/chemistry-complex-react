@@ -154,8 +154,9 @@ const CompareResultPage:FC = () => {
 
         const fetchData = async () => {
             if (inputDataOneId){
+
+                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataOneId}/`);
                 try {
-                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataOneId}/`);
                     await setResultDataOne({
                         input_data:{
                             table_parameters: response.data.input_data.table_parameters,
@@ -172,8 +173,13 @@ const CompareResultPage:FC = () => {
                         result: JSON.parse(response.data.result),
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
+                        runtime: response.data.runtime,
                     })
-
+                }
+                catch (error){
+                    setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
+                }
                     let hasNegativeValues = false;
                     for (let i = 0; i < resultDataOne!.result.length; i++) {
                         for (let j = 0; j < resultDataOne!.result[i].length; j++) {
@@ -192,15 +198,11 @@ const CompareResultPage:FC = () => {
                     else {
                         setErrorTextValueTwo('');
                     }
-                }
-                catch (error){
-                    setErrorTextOne(`Невозможно произвести расчет интеграла методом ${inputDataOne.method}. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpenOne(true);
-                }
+
             }
             if (inputDataTwoId){
+                const response = await axios.get<IResultData>(`${resultDataURL}${inputDataTwoId}/`);
                 try{
-                    const response = await axios.get<IResultData>(`${resultDataURL}${inputDataTwoId}/`);
                     await setResultDataTwo({
                         input_data:{
                             table_parameters: response.data.input_data.table_parameters,
@@ -217,7 +219,13 @@ const CompareResultPage:FC = () => {
                         result: JSON.parse(response.data.result),
                         experimental_point: JSON.parse(response.data.experimental_point),
                         error_exp_point: JSON.parse(response.data.error_exp_point),
+                        runtime: response.data.runtime,
                     })
+                }
+                catch (error){
+                    setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
+                    setIsModalOpenOne(true);
+                }
 
                     let hasNegativeValues = false;
                     for (let i = 0; i < resultDataTwo!.result.length; i++) {
@@ -237,11 +245,7 @@ const CompareResultPage:FC = () => {
                     else {
                         setErrorTextValueTwo('');
                     }
-                }
-                catch (error){
-                    setErrorTextTwo(`Невозможно произвести расчет интеграла методом ${inputDataTwo.method}. Измените шаг интегрирования или входные данные.`);
-                    setIsModalOpenOne(true);
-                }
+
 
             }
 
@@ -259,7 +263,6 @@ const CompareResultPage:FC = () => {
         setErrorTextTwo("");
     };
 
-    console.log(typeof resultDataOne?.input_data.experimental_data)
 
     const methods = [{ value: 'EXPLICIT_EULER', label: 'Явный метод Эйлера' },
         { value: 'IMPLICIT_EULER', label: 'Неявный метод Эйлера' },
@@ -322,6 +325,7 @@ const CompareResultPage:FC = () => {
                         onClose={handleCloseModalOne}
                         errorText={errorTextOne}
                     />
+                    <p className={`py-2 px-2`}>Время расчета: {resultDataOne?.runtime} секунд</p>
                     <ResultTable result={resultDataOne.result} time={resultDataOne.time}/>
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`} style={{ width: "500px", height: "250px"}}>
                         <LineGraph data={resultDataOne} />
@@ -348,6 +352,7 @@ const CompareResultPage:FC = () => {
                         onClose={handleCloseModalTwo}
                         errorText={errorTextTwo}
                     />
+                    <p className={`py-2 px-2`}>Время расчета: {resultDataTwo?.runtime} секунд</p>
                     <ResultTable result={resultDataTwo.result} time={resultDataTwo?.time}/>
                     <div className={`py-2 px-2 transition duration-300 ease-in-out`} style={{ width: "500px", height: "250px"}}>
                         <LineGraph data={resultDataTwo} />
