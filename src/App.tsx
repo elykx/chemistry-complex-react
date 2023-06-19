@@ -6,6 +6,7 @@ import TableParametersInputPage from "./components/pages/TableParametersInputPag
 import InputDataPage from "./components/pages/InputDataPage";
 import ResultPage from "./components/pages/ResultPage";
 import CompareResultPage from "./components/pages/CompareResultPage";
+import SensititvityPage from "./components/pages/SensititvityPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path='input-data/:tableParamId' element={<InputDataPage/>}/>
                 <Route path='result-page/:inputDataId' element={<ResultPage/>}/>
                 <Route path='compare-result/:inputDataId' element={<CompareResultPage/>}/>
+                <Route path='sensitivity/:inputDataId' element={<SensititvityPage/>}/>
             </Routes>
         </div>
     </BrowserRouter>

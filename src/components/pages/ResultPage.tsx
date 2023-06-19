@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
 import {IResultData} from "../../entities/IResultData";
-import {resultDataURL, saveResultDataURL} from "../../config";
+import {getSensitivityURL, resultDataURL, saveResultDataURL, tableParametersURL} from "../../config";
 import {IResultNumber} from "../../entities/IResultNumber";
 import LineGraph from "../chart/Chart";
 import {useNavigate, useParams} from "react-router-dom";
@@ -85,6 +85,10 @@ const ResultPage: FC = () => {
     const NavigateToInput = (event: React.MouseEvent<HTMLButtonElement>) => {
         navigate(`/input-data/${tableId}`)
     }
+    const NavigateToSensitivity = (event: React.MouseEvent<HTMLButtonElement>) => {
+        navigate(`/sensitivity/${inputId}`)
+    }
+
 
     const SaveReport = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const saveData = async () => {
@@ -127,7 +131,7 @@ const ResultPage: FC = () => {
                 <div className='m-2'>
                     <button className=" border border-black bg-white text-black text-sm rounded-lg py-1 px-2
                         hover:bg-lightGreen hover:text-white"
-                            onClick={NavigateToInput}>Провести оценку чувствительности</button>
+                            onClick={NavigateToSensitivity}>Провести оценку чувствительности</button>
                 </div>
                 <div className='m-2'>
                     <button className=" border border-black bg-white text-black text-sm rounded-lg py-1 px-2
